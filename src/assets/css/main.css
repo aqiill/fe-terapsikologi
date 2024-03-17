@@ -1,0 +1,11 @@
+#app {
+  font-family: "Montserrat", sans-serif;
+}
+
+.navbar-toggler {
+  background-color: #a350e8;
+}
+
+.router-link-exact-active {
+  font-weight: bold;
+}
