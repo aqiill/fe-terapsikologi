@@ -41,9 +41,6 @@
             <li class="nav-item">
               <router-link to="/report" class="nav-link">Report</router-link>
             </li>
-            <li class="nav-item">
-              <router-link to="/about" class="nav-link">Tentang</router-link>
-            </li>
             <hr class="d-sm-block d-md-none" />
             <li class="nav-item">
               <router-link to="/profile" class="nav-link" title="Profil"

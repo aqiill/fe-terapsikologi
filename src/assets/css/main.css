@@ -9,3 +9,8 @@
 .router-link-exact-active {
   font-weight: bold;
 }
+
+.btn-primary {
+  background-color: #a350e8;
+  border-color: #a350e8;
+}
