@@ -1,6 +1,8 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
 import HomeView from "../views/HomeView.vue";
+import DaftarJurusanView from "../views/DaftarJurusanView.vue";
+import DaftarJurusanDetailView from "../views/DaftarJurusanDetailView.vue";
 
 Vue.use(VueRouter);
 
@@ -11,6 +13,22 @@ const routes = [
     component: HomeView,
     meta: {
       title: "Beranda",
+    },
+  },
+  {
+    path: "/daftar-jurusan",
+    name: "daftar-jurusan",
+    component: DaftarJurusanView,
+    meta: {
+      title: "Daftar Jurusan",
+    },
+  },
+  {
+    path: "/daftar-jurusan/:id",
+    name: "daftar-jurusan-detail",
+    component: DaftarJurusanDetailView,
+    meta: {
+      title: "Detail Jurusan",
     },
   },
   {
