@@ -76,7 +76,7 @@
               </tbody>
             </table>
           </div>
-          <router-link to="/daftar-jurusan" class="btn btn-primary"
+          <router-link to="/daftar-jurusan" class="btn mt-3 btn-primary"
             ><i class="fa-solid fa-backward"></i> Kembali</router-link
           >
         </div>

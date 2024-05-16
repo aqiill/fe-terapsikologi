@@ -3,6 +3,7 @@ import VueRouter from "vue-router";
 import HomeView from "../views/HomeView.vue";
 import DaftarJurusanView from "../views/DaftarJurusanView.vue";
 import DaftarJurusanDetailView from "../views/DaftarJurusanDetailView.vue";
+import SubTesPsikologiView from "../views/SubTesPsikologiView.vue";
 
 Vue.use(VueRouter);
 
@@ -29,6 +30,14 @@ const routes = [
     component: DaftarJurusanDetailView,
     meta: {
       title: "Detail Jurusan",
+    },
+  },
+  {
+    path: "/tes-psikologi",
+    name: "tes-psikologi",
+    component: SubTesPsikologiView,
+    meta: {
+      title: "8 Sub Tes Psikologi",
     },
   },
   {

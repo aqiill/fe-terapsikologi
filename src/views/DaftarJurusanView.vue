@@ -21,7 +21,7 @@
           </datalist>
         </div>
 
-        <div class="col-12 col-md-4 mt-5">
+        <!-- <div class="col-12 col-md-4 mt-5">
           <label for="exampleDataList2" class="form-label">Filter Kampus</label>
           <input
             class="form-control"
@@ -36,7 +36,7 @@
             <option value="Politeknik Negeri Jakarta"></option>
             <option value="Institute Teknologi Bandung"></option>
           </datalist>
-        </div>
+        </div> -->
       </div>
       <div class="row">
         <div v-for="index in 8" :key="index" class="col-6 col-md-3 mt-5">
@@ -48,7 +48,7 @@
             />
             <div class="card-body d-grid gap-2">
               <h5 class="card-title">Teknik Informatika</h5>
-              <p class="card-text">UNIVERSITAS NEGERI JAKARTA</p>
+              <!-- <p class="card-text">UNIVERSITAS NEGERI JAKARTA</p> -->
               <router-link to="/daftar-jurusan/1" class="btn btn-primary btn-sm"
                 >Selengkapnya</router-link
               >

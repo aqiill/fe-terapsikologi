@@ -33,11 +33,11 @@
                 >Tes Psikologi</router-link
               >
             </li>
-            <li class="nav-item">
+            <!-- <li class="nav-item">
               <router-link to="/daftar-jurusan" class="nav-link"
                 >Daftar Jurusan</router-link
               >
-            </li>
+            </li> -->
             <li class="nav-item">
               <router-link to="/report" class="nav-link">Report</router-link>
             </li>
