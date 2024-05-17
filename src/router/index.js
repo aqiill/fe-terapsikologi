@@ -4,6 +4,7 @@ import HomeView from "../views/HomeView.vue";
 import DaftarJurusanView from "../views/DaftarJurusanView.vue";
 import DaftarJurusanDetailView from "../views/DaftarJurusanDetailView.vue";
 import SubTesPsikologiView from "../views/SubTesPsikologiView.vue";
+import TesView from "../views/TesView.vue";
 
 Vue.use(VueRouter);
 
@@ -38,6 +39,14 @@ const routes = [
     component: SubTesPsikologiView,
     meta: {
       title: "8 Sub Tes Psikologi",
+    },
+  },
+  {
+    path: "/tes/:id",
+    name: "tes",
+    component: TesView,
+    meta: {
+      title: "Tes Psikologi",
     },
   },
   {
