@@ -5,6 +5,7 @@ import DaftarJurusanView from "../views/DaftarJurusanView.vue";
 import DaftarJurusanDetailView from "../views/DaftarJurusanDetailView.vue";
 import SubTesPsikologiView from "../views/SubTesPsikologiView.vue";
 import TesView from "../views/TesView.vue";
+import ReportView from "../views/ReportView.vue";
 
 Vue.use(VueRouter);
 
@@ -47,6 +48,14 @@ const routes = [
     component: TesView,
     meta: {
       title: "Tes Psikologi",
+    },
+  },
+  {
+    path: "/report",
+    name: "report",
+    component: ReportView,
+    meta: {
+      title: "Report Hasil Tes Psikologi",
     },
   },
   {

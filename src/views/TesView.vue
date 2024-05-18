@@ -236,9 +236,9 @@ body {
   }
 }
 
-@media (max-width: 768px) {
+/* @media (max-width: 768px) {
   #app {
     display: none;
   }
-}
+} */
 </style>
