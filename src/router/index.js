@@ -7,10 +7,19 @@ import SubTesPsikologiView from "../views/SubTesPsikologiView.vue";
 import TesView from "../views/TesView.vue";
 import ReportView from "../views/ReportView.vue";
 import ProfileView from "../views/ProfileView.vue";
+import LoginView from "../views/LoginView.vue";
 
 Vue.use(VueRouter);
 
 const routes = [
+  {
+    path: "/login",
+    name: "login",
+    component: LoginView,
+    meta: {
+      title: "Login",
+    },
+  },
   {
     path: "/",
     name: "home",
