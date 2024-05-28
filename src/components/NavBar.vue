@@ -49,10 +49,10 @@
               >
             </li>
             <li class="nav-item">
-              <router-link to="/login" class="nav-link" title="Keluar">
+              <button @click="handleLogout" class="nav-link" title="Keluar">
                 <i class="fa-solid fa-right-from-bracket text-danger"></i>
-                <span class="d-sm-block d-md-none"> Keluar</span></router-link
-              >
+                <span class="d-sm-block d-md-none"> Keluar</span>
+              </button>
             </li>
           </ul>
         </div>
@@ -63,6 +63,12 @@
 <script>
 export default {
   name: "NavBar",
+  methods: {
+    handleLogout() {
+      localStorage.removeItem("user");
+      this.$router.push("/login");
+    },
+  },
 };
 </script>
 <style lang=""></style>

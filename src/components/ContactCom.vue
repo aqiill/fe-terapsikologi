@@ -4,7 +4,7 @@
     <div class="row d-flex justify-content-center">
       <div class="col-12 col-md-6">
         <h2 class="text-center mt-3"><strong>Hubungi Kami!</strong></h2>
-        <from>
+        <form>
           <div class="mb-3">
             <label for="exampleFormControlInput1" class="form-label"
               >Email address</label
@@ -40,7 +40,7 @@
           <div class="mb-3 d-grid gap-2">
             <button type="submit" class="btn btn-primary">Kirim</button>
           </div>
-        </from>
+        </form>
       </div>
     </div>
   </div>

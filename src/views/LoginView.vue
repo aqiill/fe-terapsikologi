@@ -142,6 +142,7 @@ export default {
         const response = await axios.post("/api/login", loginData);
         if (response.data.message === "Login successful") {
           Swal.fire("Login Berhasil!", "", "success");
+          localStorage.setItem("user", JSON.stringify(response.data.user));
           router.push("/");
         } else {
           Swal.fire("Login Gagal!", response.data.error, "error");
