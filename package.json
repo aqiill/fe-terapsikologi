@@ -10,6 +10,7 @@
   "dependencies": {
     "@popperjs/core": "^2.11.8",
     "axios": "^1.6.8",
+    "blueimp-md5": "^2.19.0",
     "bootstrap": "^5.3.3",
     "chart.js": "^4.4.2",
     "core-js": "^3.8.3",

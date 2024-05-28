@@ -6,12 +6,12 @@
       <!-- profile -->
       <div class="circle-container">
         <img
-          src="https://www.gravatar.com/avatar/423423442424242223232?d=mp&s=100"
+          src="https://www.gravatar.com/avatar/${studentEmailEncrypt}?d=identicon"
           alt="Profil Pengguna"
           class="img-fluid rounded-circle"
         />
       </div>
-      <h3 class="text-center">Aqil Rahman</h3>
+      <h3 class="text-center">{{ studentEmail }}</h3>
 
       <hr />
 
@@ -29,6 +29,8 @@
           :title="item.title"
           :img-src="item.imgSrc"
           :img-alt="item.imgAlt"
+          :disabled="item.disabled"
+          :bg-success="item.disabled"
         />
       </div>
     </div>
@@ -42,58 +44,123 @@ import NavBar from "@/components/NavBar.vue";
 import FooterCom from "@/components/FooterCom.vue";
 import CardItem from "@/components/CardSubTest.vue";
 
+import md5 from "blueimp-md5";
+import axios from "axios";
+
 export default {
-  name: "DaftarJurusanView",
+  name: "SubTesPsikologiView",
   components: {
     NavBar,
     FooterCom,
     CardItem,
   },
+  mounted() {
+    this.id = JSON.parse(localStorage.getItem("user")).id;
+    this.studentEmail = JSON.parse(localStorage.getItem("user")).student_email;
+    this.studentEmailEncrypt = md5(this.studentEmail);
+    this.fetchTestData();
+  },
   data() {
     return {
+      id: "",
+      studentEmail: "",
+      studentEmailEncrypt: "",
       testItems: [
         {
           title: "Kepribadian",
+          key: "ocean",
           imgSrc: require("@/assets/images/personality.svg"),
           imgAlt: "Kepribadian",
+          disabled: false,
         },
         {
           title: "Minat",
+          key: "riasec",
           imgSrc: require("@/assets/images/interest.svg"),
           imgAlt: "Minat",
+          disabled: false,
         },
         {
           title: "Visualization",
+          key: "visual",
           imgSrc: require("@/assets/images/visualization.svg"),
           imgAlt: "Visualization",
+          disabled: false,
         },
         {
           title: "Induction",
+          key: "induction",
           imgSrc: require("@/assets/images/induction.svg"),
           imgAlt: "Induction",
+          disabled: false,
         },
         {
           title: "Qty Reas",
+          key: "quatitative_reasoning",
           imgSrc: require("@/assets/images/qty_reas.svg"),
           imgAlt: "Qty Reas",
+          disabled: false,
         },
         {
           title: "Math",
+          key: "math",
           imgSrc: require("@/assets/images/math.svg"),
           imgAlt: "Math",
+          disabled: false,
         },
         {
           title: "Reading",
+          key: "reading",
           imgSrc: require("@/assets/images/reading.svg"),
           imgAlt: "Reading",
+          disabled: false,
         },
         {
           title: "Memori",
+          key: "memory",
           imgSrc: require("@/assets/images/memory.svg"),
           imgAlt: "Memori",
+          disabled: false,
         },
       ],
     };
+  },
+  methods: {
+    async fetchTestData() {
+      try {
+        const response = await axios.get(
+          `https://api.abcompany.my.id/api/test/${this.id}`
+        );
+        const data = response.data;
+
+        // console.log(data);
+
+        if (data.least_time === null) {
+          return;
+        }
+
+        const now = new Date();
+        const tenMinutesAgo = new Date(now.getTime() - 10 * 60 * 1000);
+        const sixMinutesAgo = new Date(now.getTime() - 6 * 60 * 1000);
+
+        this.testItems.forEach((item) => {
+          const answerTime = data.time_first_answers[item.key];
+          if (answerTime) {
+            const createdAt = new Date(answerTime.created_at);
+            if (
+              (item.key === "ocean" || item.key === "riasec") &&
+              createdAt < tenMinutesAgo
+            ) {
+              item.disabled = true;
+            } else if (createdAt < sixMinutesAgo) {
+              item.disabled = true;
+            }
+          }
+        });
+      } catch (error) {
+        console.error("Error fetching test data:", error);
+      }
+    },
   },
 };
 </script>

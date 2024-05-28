@@ -1,8 +1,13 @@
 <template>
   <div class="col-6 col-md-3 mt-3">
-    <div class="card box-sub-tes" @click="showAlert">
+    <div
+      class="card box-sub-tes"
+      :class="{ disabled, 'bg-success': bgSuccess }"
+      @click="showAlert()"
+    >
       <div class="card-img-container">
         <img :src="imgSrc" class="card-img-top p-3" :alt="imgAlt" />
+        <div v-if="disabled" class="label-top">Selesai</div>
       </div>
       <div class="card-body">
         <h5 class="card-title text-center">{{ title }}</h5>
@@ -20,9 +25,15 @@ export default {
     title: String,
     imgSrc: String,
     imgAlt: String,
+    disabled: Boolean,
+    bgSuccess: Boolean,
   },
   methods: {
     showAlert() {
+      if (this.disabled) {
+        return;
+      }
+
       let alertOptions = {};
       let redirectPath = "/";
 
@@ -39,7 +50,7 @@ export default {
             confirmButtonText: "Ya, Mulai!",
             cancelButtonText: "Tidak, Batalkan!",
           };
-          redirectPath = "/tes/kepribadian";
+          redirectPath = "/tes/kepribadian/1";
           break;
         }
         case "Minat": {
@@ -52,7 +63,7 @@ export default {
             confirmButtonText: "Ya, Mulai!",
             cancelButtonText: "Tidak, Batalkan!",
           };
-          redirectPath = "/tes/minat";
+          redirectPath = "/tes/minat/61";
           break;
         }
         case "Visualization": {
@@ -66,7 +77,7 @@ export default {
             confirmButtonText: "Ya, Mulai!",
             cancelButtonText: "Tidak, Batalkan!",
           };
-          redirectPath = "/tes/visualization";
+          redirectPath = "/tes/visualization/115";
           break;
         }
         case "Induction": {
@@ -83,7 +94,7 @@ export default {
             confirmButtonText: "Ya, Mulai!",
             cancelButtonText: "Tidak, Batalkan!",
           };
-          redirectPath = "/tes/induction";
+          redirectPath = "/tes/induction/175";
           break;
         }
         case "Qty Reas": {
@@ -96,7 +107,7 @@ export default {
             confirmButtonText: "Ya, Mulai!",
             cancelButtonText: "Tidak, Batalkan!",
           };
-          redirectPath = "/tes/qty_reas";
+          redirectPath = "/tes/qty_reas/205";
           break;
         }
         case "Math": {
@@ -110,7 +121,7 @@ export default {
             confirmButtonText: "Ya, Mulai!",
             cancelButtonText: "Tidak, Batalkan!",
           };
-          redirectPath = "/tes/math";
+          redirectPath = "/tes/math/235";
           break;
         }
         case "Reading": {
@@ -123,7 +134,7 @@ export default {
             confirmButtonText: "Ya, Mulai!",
             cancelButtonText: "Tidak, Batalkan!",
           };
-          redirectPath = "/tes/reading";
+          redirectPath = "/tes/reading/265";
           break;
         }
         case "Memori": {
@@ -146,7 +157,7 @@ export default {
             allowOutsideClick: false,
             willClose: () => {
               clearInterval(this.countdownInterval);
-              this.$router.push("/tes/memori");
+              this.$router.push("/tes/memori/287");
             },
           };
           // Mengatur countdown timer pada sweet alert
@@ -215,5 +226,17 @@ export default {
 .router-link-active {
   color: inherit;
   text-decoration: none;
+}
+
+.label-top {
+  position: absolute;
+  top: 0;
+  right: 0;
+  background-color: rgb(240, 191, 76);
+  color: black;
+  padding: 5px 10px;
+  font-size: 0.9rem;
+  font-weight: bold;
+  border-radius: 0.25rem;
 }
 </style>

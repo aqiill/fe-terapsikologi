@@ -53,7 +53,7 @@ const routes = [
     },
   },
   {
-    path: "/tes/:id",
+    path: "/tes/:subTest/:id",
     name: "tes",
     component: TesView,
     meta: {

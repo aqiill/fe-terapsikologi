@@ -4,7 +4,7 @@
 
     <div class="container mt-5">
       <div class="row">
-        <div class="col-12">
+        <!-- <div class="col-12">
           <div class="circle-container">
             <img
               src="https://www.gravatar.com/avatar/423423442424242223232?d=mp&s=100"
@@ -14,6 +14,127 @@
           </div>
           <h3 class="text-center">Aqil Rahman</h3>
 
+          <hr />
+        </div> -->
+
+        <div class="col-12">
+          <img
+            src="../assets/images/rekomendasi.svg"
+            alt="Rekomendasi"
+            class="justify-content-center d-block mx-auto"
+            width="20%"
+          />
+          <h3 class="text-center">Rekomendasi Jurusan</h3>
+          <h3 class="text-center">Aqil Rahman</h3>
+
+          <div class="row">
+            <div class="col-12 mt-3"><b>S1-Saintek</b></div>
+            <div class="col-12 col-md-6 mt-3">
+              <div class="progress">
+                <div
+                  class="progress-bar bg-warning text-dark"
+                  role="progressbar"
+                  style="width: 75%"
+                  aria-valuenow="75"
+                  aria-valuemin="0"
+                  aria-valuemax="100"
+                >
+                  Teknik Informatika 75% Cocok
+                </div>
+              </div>
+            </div>
+            <div class="col-12 col-md-6 mt-3">
+              <div class="progress">
+                <div
+                  class="progress-bar bg-warning text-dark"
+                  role="progressbar"
+                  style="width: 78%"
+                  aria-valuenow="78"
+                  aria-valuemin="0"
+                  aria-valuemax="100"
+                >
+                  Teknik Sipil 78% Cocok
+                </div>
+              </div>
+            </div>
+            <div class="col-12 col-md-6 mt-3">
+              <div class="progress">
+                <div
+                  class="progress-bar bg-warning text-dark"
+                  role="progressbar"
+                  style="width: 85%"
+                  aria-valuenow="85"
+                  aria-valuemin="0"
+                  aria-valuemax="100"
+                >
+                  Teknik Kimia 85% Cocok
+                </div>
+              </div>
+            </div>
+
+            <div class="col-12 mt-3"><b>S1-Soshum</b></div>
+            <div class="col-12 col-md-6 mt-3">
+              <div class="progress">
+                <div
+                  class="progress-bar bg-warning text-dark"
+                  role="progressbar"
+                  style="width: 90%"
+                  aria-valuenow="90"
+                  aria-valuemin="0"
+                  aria-valuemax="100"
+                >
+                  Hubungan Internasional 90% Cocok
+                </div>
+              </div>
+            </div>
+            <div class="col-12 col-md-6 mt-3">
+              <div class="progress">
+                <div
+                  class="progress-bar bg-warning text-dark"
+                  role="progressbar"
+                  style="width: 85%"
+                  aria-valuenow="85"
+                  aria-valuemin="0"
+                  aria-valuemax="100"
+                >
+                  Ilmu Hukum 85% Cocok
+                </div>
+              </div>
+            </div>
+
+            <div class="col-12 mt-3"><b>Keagamaan</b></div>
+            <div class="col-12 col-md-6 mt-3">
+              <div class="progress">
+                <div
+                  class="progress-bar bg-warning text-dark"
+                  role="progressbar"
+                  style="width: 87%"
+                  aria-valuenow="87"
+                  aria-valuemin="0"
+                  aria-valuemax="100"
+                >
+                  Ilmu Tajwid 87% Cocok
+                </div>
+              </div>
+            </div>
+            <div class="col-12 col-md-6 mt-3">
+              <div class="progress">
+                <div
+                  class="progress-bar bg-warning text-dark"
+                  role="progressbar"
+                  style="width: 80%"
+                  aria-valuenow="80"
+                  aria-valuemin="0"
+                  aria-valuemax="100"
+                >
+                  Fiqih 80% Cocok
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-12">
           <hr />
         </div>
 
@@ -291,126 +412,6 @@
                     pada tipe ini cenderung lebih sulit dalam memahami dan
                     menganalisis teks.
                   </p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="col-12">
-          <hr />
-        </div>
-
-        <div class="col-12">
-          <img
-            src="../assets/images/rekomendasi.svg"
-            alt="Rekomendasi"
-            class="justify-content-center d-block mx-auto"
-            width="20%"
-          />
-          <h3 class="text-center">Rekomendasi Jurusan</h3>
-
-          <div class="row">
-            <div class="col-12 mt-3"><b>S1-Saintek</b></div>
-            <div class="col-12 col-md-6 mt-3">
-              <div class="progress">
-                <div
-                  class="progress-bar bg-warning text-dark"
-                  role="progressbar"
-                  style="width: 75%"
-                  aria-valuenow="75"
-                  aria-valuemin="0"
-                  aria-valuemax="100"
-                >
-                  Teknik Informatika 75% Cocok
-                </div>
-              </div>
-            </div>
-            <div class="col-12 col-md-6 mt-3">
-              <div class="progress">
-                <div
-                  class="progress-bar bg-warning text-dark"
-                  role="progressbar"
-                  style="width: 78%"
-                  aria-valuenow="78"
-                  aria-valuemin="0"
-                  aria-valuemax="100"
-                >
-                  Teknik Sipil 78% Cocok
-                </div>
-              </div>
-            </div>
-            <div class="col-12 col-md-6 mt-3">
-              <div class="progress">
-                <div
-                  class="progress-bar bg-warning text-dark"
-                  role="progressbar"
-                  style="width: 85%"
-                  aria-valuenow="85"
-                  aria-valuemin="0"
-                  aria-valuemax="100"
-                >
-                  Teknik Kimia 85% Cocok
-                </div>
-              </div>
-            </div>
-
-            <div class="col-12 mt-3"><b>S1-Soshum</b></div>
-            <div class="col-12 col-md-6 mt-3">
-              <div class="progress">
-                <div
-                  class="progress-bar bg-warning text-dark"
-                  role="progressbar"
-                  style="width: 90%"
-                  aria-valuenow="90"
-                  aria-valuemin="0"
-                  aria-valuemax="100"
-                >
-                  Hubungan Internasional 90% Cocok
-                </div>
-              </div>
-            </div>
-            <div class="col-12 col-md-6 mt-3">
-              <div class="progress">
-                <div
-                  class="progress-bar bg-warning text-dark"
-                  role="progressbar"
-                  style="width: 85%"
-                  aria-valuenow="85"
-                  aria-valuemin="0"
-                  aria-valuemax="100"
-                >
-                  Ilmu Hukum 85% Cocok
-                </div>
-              </div>
-            </div>
-
-            <div class="col-12 mt-3"><b>Keagamaan</b></div>
-            <div class="col-12 col-md-6 mt-3">
-              <div class="progress">
-                <div
-                  class="progress-bar bg-warning text-dark"
-                  role="progressbar"
-                  style="width: 87%"
-                  aria-valuenow="87"
-                  aria-valuemin="0"
-                  aria-valuemax="100"
-                >
-                  Ilmu Tajwid 87% Cocok
-                </div>
-              </div>
-            </div>
-            <div class="col-12 col-md-6 mt-3">
-              <div class="progress">
-                <div
-                  class="progress-bar bg-warning text-dark"
-                  role="progressbar"
-                  style="width: 80%"
-                  aria-valuenow="80"
-                  aria-valuemin="0"
-                  aria-valuemax="100"
-                >
-                  Fiqih 80% Cocok
                 </div>
               </div>
             </div>
