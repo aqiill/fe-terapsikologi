@@ -108,6 +108,10 @@
 </template>
 
 <script>
+import router from "@/router";
+import axios from "axios";
+import Swal from "sweetalert2";
+
 export default {
   name: "LoginPage",
   data() {
@@ -128,8 +132,23 @@ export default {
     };
   },
   methods: {
-    handleLogin() {
-      console.log("Login Data:", this.login);
+    async handleLogin() {
+      const loginData = {
+        email: this.login.email,
+        password: this.login.password,
+      };
+
+      try {
+        const response = await axios.post("/api/login", loginData);
+        if (response.data.message === "Login successful") {
+          Swal.fire("Login Berhasil!", "", "success");
+          router.push("/");
+        } else {
+          Swal.fire("Login Gagal!", response.data.error, "error");
+        }
+      } catch (error) {
+        Swal.fire("Login Gagal!", "Email atau Password salah!", "error");
+      }
     },
     handleRegister() {
       console.log("Registration Data:", this.register);
@@ -152,5 +171,9 @@ export default {
 }
 .logo {
   max-width: 300px;
+}
+
+.btn-link {
+  text-decoration: none;
 }
 </style>

@@ -49,7 +49,7 @@
               >
             </li>
             <li class="nav-item">
-              <router-link to="/logout" class="nav-link" title="Keluar">
+              <router-link to="/login" class="nav-link" title="Keluar">
                 <i class="fa-solid fa-right-from-bracket text-danger"></i>
                 <span class="d-sm-block d-md-none"> Keluar</span></router-link
               >
