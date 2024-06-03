@@ -50,7 +50,7 @@ export default {
             confirmButtonText: "Ya, Mulai!",
             cancelButtonText: "Tidak, Batalkan!",
           };
-          redirectPath = "/tes/kepribadian/1";
+          redirectPath = "/tes/kepribadian-minat/1";
           break;
         }
         case "Minat": {
@@ -63,7 +63,7 @@ export default {
             confirmButtonText: "Ya, Mulai!",
             cancelButtonText: "Tidak, Batalkan!",
           };
-          redirectPath = "/tes/minat/61";
+          redirectPath = "/tes/kepribadian-minat/61";
           break;
         }
         case "Visualization": {
@@ -77,7 +77,7 @@ export default {
             confirmButtonText: "Ya, Mulai!",
             cancelButtonText: "Tidak, Batalkan!",
           };
-          redirectPath = "/tes/visualization/115";
+          redirectPath = "/tes/bakat/115";
           break;
         }
         case "Induction": {
@@ -94,7 +94,7 @@ export default {
             confirmButtonText: "Ya, Mulai!",
             cancelButtonText: "Tidak, Batalkan!",
           };
-          redirectPath = "/tes/induction/175";
+          redirectPath = "/tes/bakat/175";
           break;
         }
         case "Qty Reas": {
@@ -107,7 +107,7 @@ export default {
             confirmButtonText: "Ya, Mulai!",
             cancelButtonText: "Tidak, Batalkan!",
           };
-          redirectPath = "/tes/qty_reas/205";
+          redirectPath = "/tes/bakat/205";
           break;
         }
         case "Math": {
@@ -121,7 +121,7 @@ export default {
             confirmButtonText: "Ya, Mulai!",
             cancelButtonText: "Tidak, Batalkan!",
           };
-          redirectPath = "/tes/math/235";
+          redirectPath = "/tes/bakat/235";
           break;
         }
         case "Reading": {
@@ -134,7 +134,7 @@ export default {
             confirmButtonText: "Ya, Mulai!",
             cancelButtonText: "Tidak, Batalkan!",
           };
-          redirectPath = "/tes/reading/265";
+          redirectPath = "/tes/bakat/265";
           break;
         }
         case "Memori": {
@@ -157,7 +157,7 @@ export default {
             allowOutsideClick: false,
             willClose: () => {
               clearInterval(this.countdownInterval);
-              this.$router.push("/tes/memori/287");
+              this.$router.push("/tes/bakat/287");
             },
           };
           // Mengatur countdown timer pada sweet alert

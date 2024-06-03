@@ -5,6 +5,7 @@ import DaftarJurusanView from "../views/DaftarJurusanView.vue";
 import DaftarJurusanDetailView from "../views/DaftarJurusanDetailView.vue";
 import SubTesPsikologiView from "../views/SubTesPsikologiView.vue";
 import TesView from "../views/TesView.vue";
+import TesView2 from "../views/TesView2.vue";
 import ReportView from "../views/ReportView.vue";
 import ProfileView from "../views/ProfileView.vue";
 import LoginView from "../views/LoginView.vue";
@@ -53,9 +54,17 @@ const routes = [
     },
   },
   {
-    path: "/tes/:subTest/:id",
-    name: "tes",
+    path: "/tes/kepribadian-minat/:id",
+    name: "tes-kepribadian-minat",
     component: TesView,
+    meta: {
+      title: "Tes Psikologi",
+    },
+  },
+  {
+    path: "/tes/bakat/:id",
+    name: "tes-bakat",
+    component: TesView2,
     meta: {
       title: "Tes Psikologi",
     },

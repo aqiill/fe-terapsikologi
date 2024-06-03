@@ -140,19 +140,25 @@ export default {
         }
 
         const now = new Date();
-        const tenMinutesAgo = new Date(now.getTime() - 10 * 60 * 1000);
-        const sixMinutesAgo = new Date(now.getTime() - 6 * 60 * 1000);
+        console.log("waktu sekarang", now);
 
         this.testItems.forEach((item) => {
           const answerTime = data.time_first_answers[item.key];
           if (answerTime) {
-            const createdAt = new Date(answerTime.created_at);
-            if (
-              (item.key === "ocean" || item.key === "riasec") &&
-              createdAt < tenMinutesAgo
-            ) {
-              item.disabled = true;
-            } else if (createdAt < sixMinutesAgo) {
+            let createdAt = new Date(answerTime.created_at);
+
+            if (item.key === "ocean" || item.key === "riasec") {
+              createdAt = new Date(
+                createdAt.getTime() + 7 * 60 * 60 * 1000 + 10 * 60 * 1000
+              );
+              console.log("waktu ocean", createdAt);
+            } else {
+              createdAt = new Date(
+                createdAt.getTime() + 7 * 60 * 60 * 1000 + 6 * 60 * 1000
+              );
+            }
+
+            if (now > createdAt) {
               item.disabled = true;
             }
           }

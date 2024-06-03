@@ -18,20 +18,20 @@
         <h5 class="text-center mt-3">Nomor Soal</h5>
         <div class="d-flex flex-wrap justify-content-center">
           <div
-            v-for="number in 60"
-            :key="number"
+            v-for="(question, index) in totalQuestions"
+            :key="question.id"
             class="p-2"
             style="width: 25%"
           >
             <button
               :class="{
-                'btn-warning': number === currentQuestion.number,
-                'btn-secondary': number !== currentQuestion.number,
+                'btn-warning': question.id == currentQuestion.question_id,
+                'btn-secondary': question.id !== currentQuestion.question_id,
               }"
               class="btn btn-question w-100"
-              @click="selectQuestion(number)"
+              @click="selectQuestion(question.id)"
             >
-              {{ number }}
+              {{ index + 1 }}
             </button>
           </div>
         </div>
@@ -56,17 +56,7 @@
       <!-- Question Box -->
       <div class="container mt-5">
         <div class="question-box p-4">
-          <div
-            v-if="currentQuestion.image"
-            class="d-flex justify-content-center"
-          >
-            <img
-              :src="currentQuestion.image"
-              alt="Question Image"
-              class="img-fluid mb-3"
-            />
-          </div>
-          <h4>{{ currentQuestion.text }}</h4>
+          <h4>{{ currentQuestion.number }}. {{ currentQuestion.question }}</h4>
           <div class="mt-3 d-flex justify-content-center flex-wrap">
             <div
               v-for="choice in currentQuestion.choices"
@@ -79,6 +69,7 @@
                 :name="'question' + currentQuestion.number"
                 :id="'choice' + choice.value"
                 :value="choice.value"
+                v-model="selectedAnswer"
               />
               <label class="form-check-label" :for="'choice' + choice.value">
                 <div v-if="choice.image">
@@ -91,11 +82,22 @@
             </div>
           </div>
           <div class="d-flex justify-content-between mt-3">
-            <button class="btn btn-secondary" @click="prevQuestion">
+            <button
+              v-if="currentQuestion.number != 1"
+              class="btn btn-secondary"
+              @click="prevQuestion"
+            >
               <i class="fa-solid fa-arrow-left"></i> Kembali
             </button>
-            <button class="btn btn-primary" @click="nextQuestion">
-              Selanjutnya <i class="fa-solid fa-arrow-right"></i>
+            <button
+              v-if="currentQuestion.number < totalQuestions.length"
+              class="btn btn-primary"
+              @click="handleNextQuestion"
+              :disabled="isLoading"
+            >
+              <span v-if="isLoading">Loading...</span>
+              <span v-if="!isLoading">Selanjutnya</span>
+              <i class="fa-solid fa-arrow-right"></i>
             </button>
           </div>
         </div>
@@ -108,37 +110,40 @@
 </template>
 
 <script>
+import axios from "axios";
+import Swal from "sweetalert2";
+
 export default {
   data() {
     return {
       currentQuestion: {
+        question_id: null,
         number: 1,
-        text: "Jika kubus kita putar satu kali ke arah kiri, satu kali. Bentuk kubus yang baru adalah",
-        image:
-          "https://raw.githubusercontent.com/kojolahsandboxcorp/TerapsAssets/7882457ecc27bb816cfe4bf94632244ab8bf1eb6/soal-3/3.svg", // URL gambar soal (opsional)
-        choices: [
-          { value: "choice1", text: "Pilihan 1" },
-          {
-            value: "choice2",
-            text: "Pilihan 2",
-            image: "https://example.com/choice2.png",
-          },
-          { value: "choice3", text: "Pilihan 3" },
-          { value: "choice4", text: "Pilihan 4" },
-        ],
+        question: "",
+        choices: [],
+        last_id: null,
       },
-      minutes: 6,
+      selectedAnswer: null,
+      totalQuestions: [],
+      minutes: 10,
       seconds: 0,
       isDesktopOrLandscape:
         window.innerWidth > 768 || window.innerHeight < window.innerWidth,
+      timeUpRedirected: false,
+      isLoading: false,
     };
   },
   mounted() {
     this.startTimer();
     window.addEventListener("resize", this.handleResize);
+    this.loadQuestionFromRoute();
+    this.loadQuestions();
   },
   beforeDestroy() {
     window.removeEventListener("resize", this.handleResize);
+  },
+  watch: {
+    "$route.params.id": "loadQuestionFromRoute",
   },
   methods: {
     startTimer() {
@@ -147,6 +152,19 @@ export default {
           if (this.minutes > 0) {
             this.minutes--;
             this.seconds = 59;
+          } else if (!this.timeUpRedirected) {
+            this.timeUpRedirected = true;
+            localStorage.removeItem("first_time_access");
+            localStorage.removeItem("first_submit");
+            Swal.fire({
+              icon: "warning",
+              title: "Waktu Habis",
+              text: "Waktu untuk mengerjakan soal sudah habis.",
+            }).then(() => {
+              if (this.$route.name !== "tes-psikologi") {
+                this.$router.push({ name: "tes-psikologi" });
+              }
+            });
           }
         } else {
           this.seconds--;
@@ -157,30 +175,181 @@ export default {
       this.isDesktopOrLandscape =
         window.innerWidth > 768 || window.innerHeight < window.innerWidth;
     },
-    selectQuestion(number) {
-      this.currentQuestion = {
-        number: number,
-        text: `Contoh soal nomor ${number}?`,
-        image:
-          number % 2 === 0
-            ? "https://raw.githubusercontent.com/kojolahsandboxcorp/TerapsAssets/7882457ecc27bb816cfe4bf94632244ab8bf1eb6/soal-3/3.svg"
-            : null, // Contoh kondisi untuk gambar soal
-        choices: [
-          { value: "choice1", text: "Pilihan 1" },
+
+    async loadQuestions() {
+      const questionNumber = parseInt(this.$route.params.id);
+      const studentId = JSON.parse(localStorage.getItem("user")).id;
+      try {
+        const response = await axios.get(
+          `https://api.abcompany.my.id/api/test/form/${questionNumber}/${studentId}`,
           {
-            value: "choice2",
-            text: "Pilihan 2",
-            image:
-              "https://raw.githubusercontent.com/kojolahsandboxcorp/TerapsAssets/f8946186f03e0be3d8d7db37d6ecc047f1ec15bb/jawaban-3/28-3.svg",
+            headers: {
+              "api-key": "qwe123qwe#",
+            },
+          }
+        );
+        this.totalQuestions = response.data.total_question;
+        this.loadQuestionFromRoute();
+      } catch (error) {
+        console.error("Error loading questions:", error);
+        Swal.fire({
+          icon: "error",
+          title: "Error",
+          text: "Gagal memuat soal. Silakan coba lagi.",
+        });
+      }
+    },
+
+    selectQuestion(number) {
+      if (this.$route.params.id !== String(number)) {
+        this.$router
+          .push({
+            name: "tes-kepribadian-minat",
+            params: { id: number },
+          })
+          .catch((err) => {
+            if (err.name !== "NavigationDuplicated") {
+              console.error(err);
+            }
+          });
+      }
+    },
+    async loadQuestionFromRoute() {
+      const questionNumber = parseInt(this.$route.params.id);
+      const studentId = JSON.parse(localStorage.getItem("user")).id;
+      try {
+        const response = await axios.get(
+          `https://api.abcompany.my.id/api/test/form/${questionNumber}/${studentId}`,
+          {
+            headers: {
+              "api-key": "qwe123qwe#",
+            },
+          }
+        );
+
+        const questionData = response.data;
+        let choices;
+
+        if (questionData.question.order === "f") {
+          choices = [
+            { value: "1", text: "Sangat Sesuai" },
+            { value: "2", text: "Sesuai" },
+            { value: "3", text: "Agar Sesuai" },
+            { value: "4", text: "Tidak Sesuai" },
+            { value: "5", text: "Sangat Tidak Sesuai" },
+          ];
+        } else {
+          choices = [
+            { value: "5", text: "Sangat Sesuai" },
+            { value: "4", text: "Sesuai" },
+            { value: "3", text: "Agar Sesuai" },
+            { value: "2", text: "Tidak Sesuai" },
+            { value: "1", text: "Sangat Tidak Sesuai" },
+          ];
+        }
+
+        this.currentQuestion = {
+          question_id: questionData.question_id,
+          number: questionData.number,
+          question: questionData.question.question,
+          choices: choices,
+          last_id: questionData.last_id,
+        };
+
+        if (questionData.student_answer !== null) {
+          this.selectedAnswer = questionData.student_answer;
+        } else {
+          this.selectedAnswer = null;
+        }
+
+        console.log(questionData);
+        if (questionData.first_answers == null) {
+          const now = new Date();
+          if (localStorage.getItem("first_time_access") === null) {
+            localStorage.setItem("first_time_access", now);
+          }
+          const firstTimeAccess = new Date(
+            localStorage.getItem("first_time_access")
+          );
+
+          const tenMinutesLater = new Date(
+            firstTimeAccess.getTime() + 10 * 60 * 1000
+          );
+
+          this.minutes = Math.floor((tenMinutesLater - now) / 60000);
+          this.seconds = Math.floor((tenMinutesLater - now) / 1000) % 60;
+        } else {
+          const now = new Date();
+          const firstTimeAccessString = questionData.first_answers.replace(
+            " ",
+            "T"
+          );
+          const firstTimeAccess = new Date(firstTimeAccessString);
+
+          firstTimeAccess.setHours(firstTimeAccess.getHours() + 7);
+
+          const tenMinutesLater = new Date(
+            firstTimeAccess.getTime() + 10 * 60 * 1000
+          );
+
+          this.minutes = Math.floor((tenMinutesLater - now) / 60000);
+          this.seconds = Math.floor((tenMinutesLater - now) / 1000) % 60;
+        }
+      } catch (error) {
+        console.error("Error loading question:", error);
+        Swal.fire({
+          icon: "error",
+          title: "Error",
+          text: "Gagal memuat soal. Silakan coba lagi.",
+        });
+      }
+    },
+    async submitAnswer() {
+      const questionId = this.currentQuestion.question_id;
+      const studentId = JSON.parse(localStorage.getItem("user")).id;
+
+      const now = localStorage.getItem("first_time_access");
+      let first_submit = localStorage.getItem("first_submit");
+      let isoDate;
+      if (!first_submit || first_submit === "false") {
+        isoDate = new Date(now).toISOString().replace("T", " ").split(".")[0];
+        localStorage.setItem("first_submit", true);
+      } else {
+        isoDate = new Date().toISOString().replace("T", " ").split(".")[0];
+      }
+
+      try {
+        await axios.post(
+          `https://api.abcompany.my.id/api/test/submit/${questionId}/${studentId}`,
+          {
+            answer: this.selectedAnswer,
+            created_at: isoDate,
           },
-          { value: "choice3", text: "Pilihan 3" },
-          { value: "choice4", text: "Pilihan 4" },
-        ],
-      };
+          {
+            headers: {
+              "api-key": "qwe123qwe#",
+            },
+          }
+        );
+      } catch (error) {
+        console.error("Error submitting answer:", error);
+        Swal.fire({
+          icon: "error",
+          title: "Error",
+          text: "Gagal mengirim jawaban. Silakan coba lagi.",
+        });
+      }
+    },
+    async handleNextQuestion() {
+      this.isLoading = true;
+      await this.submitAnswer();
+      this.nextQuestion();
+      this.isLoading = false;
     },
     nextQuestion() {
-      if (this.currentQuestion.number < 60) {
-        this.selectQuestion(this.currentQuestion.number + 1);
+      const nextQuestionId = parseInt(this.currentQuestion.number) + 1;
+      if (nextQuestionId <= this.totalQuestions.length) {
+        this.selectQuestion(nextQuestionId);
       }
     },
     prevQuestion() {
@@ -235,10 +404,4 @@ body {
     margin: 20px;
   }
 }
-
-/* @media (max-width: 768px) {
-  #app {
-    display: none;
-  }
-} */
 </style>
