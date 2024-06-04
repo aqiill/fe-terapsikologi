@@ -27,6 +27,7 @@
               :class="{
                 'btn-warning': question.id == currentQuestion.question_id,
                 'btn-secondary': question.id !== currentQuestion.question_id,
+                'btn-primary': question.chosen == 1,
               }"
               class="btn btn-question w-100"
               @click="selectQuestion(question.id)"
@@ -432,6 +433,7 @@ export default {
       this.isLoading = true;
       await this.submitAnswer();
       this.nextQuestion();
+      this.loadQuestions();
       this.isLoading = false;
     },
     nextQuestion() {
