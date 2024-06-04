@@ -90,13 +90,24 @@
               <i class="fa-solid fa-arrow-left"></i> Kembali
             </button>
             <button
-              v-if="currentQuestion.number < totalQuestions.length"
+              v-if="currentQuestion.question_id < currentQuestion.last_id"
               class="btn btn-primary"
               @click="handleNextQuestion"
               :disabled="isLoading"
             >
               <span v-if="isLoading">Loading...</span>
               <span v-if="!isLoading">Selanjutnya</span>
+              <i class="fa-solid fa-arrow-right"></i>
+            </button>
+
+            <button
+              v-if="currentQuestion.question_id == currentQuestion.last_id"
+              class="btn btn-warning"
+              @click="handleNextQuestion"
+              :disabled="isLoading"
+            >
+              <span v-if="isLoading">Loading...</span>
+              <span v-if="!isLoading">Selesaikan</span>
               <i class="fa-solid fa-arrow-right"></i>
             </button>
           </div>
@@ -122,6 +133,7 @@ export default {
         question: "",
         choices: [],
         last_id: null,
+        first_id: null,
       },
       selectedAnswer: null,
       totalQuestions: [],
@@ -133,11 +145,11 @@ export default {
       isLoading: false,
     };
   },
-  mounted() {
+  async mounted() {
     this.startTimer();
     window.addEventListener("resize", this.handleResize);
     this.loadQuestionFromRoute();
-    this.loadQuestions();
+    await this.loadQuestions();
   },
   beforeDestroy() {
     window.removeEventListener("resize", this.handleResize);
@@ -156,6 +168,7 @@ export default {
             this.timeUpRedirected = true;
             localStorage.removeItem("first_time_access");
             localStorage.removeItem("first_submit");
+            localStorage.removeItem("title_active");
             Swal.fire({
               icon: "warning",
               title: "Waktu Habis",
@@ -217,6 +230,81 @@ export default {
     async loadQuestionFromRoute() {
       const questionNumber = parseInt(this.$route.params.id);
       const studentId = JSON.parse(localStorage.getItem("user")).id;
+
+      const navigateToTesPsikologi = () => {
+        if (this.$route.name !== "tes-psikologi") {
+          this.$router.push({ name: "tes-psikologi" });
+        }
+      };
+      // Redirect check
+      // console.log("last_id", this.currentQuestion.last_id);
+      // console.log("first_id", this.currentQuestion.first_id);
+
+      let last_id;
+      let first_id;
+      if (
+        this.currentQuestion.last_id == null &&
+        this.currentQuestion.first_id == null
+      ) {
+        if (localStorage.getItem("title_active") == "Kepribadian") {
+          last_id = 1;
+          first_id = 1;
+        } else if (localStorage.getItem("title_active") == "Minat") {
+          last_id = 61;
+          first_id = 61;
+        }
+
+        if (localStorage.getItem("title_active") && last_id < questionNumber) {
+          Swal.fire({
+            icon: "warning",
+            title: "Anda Belum diizinkan melaksanakan test tersebut",
+            timer: 5000,
+          }).then(() => {
+            navigateToTesPsikologi();
+          });
+          return;
+        }
+
+        if (localStorage.getItem("title_active") && first_id > questionNumber) {
+          Swal.fire({
+            icon: "warning",
+            title: "Anda tidak diizinkan mengakses halaman tersebut",
+            timer: 5000,
+          }).then(() => {
+            navigateToTesPsikologi();
+          });
+          return;
+        }
+      } else {
+        if (
+          localStorage.getItem("title_active") &&
+          this.currentQuestion.last_id < questionNumber
+        ) {
+          Swal.fire({
+            icon: "warning",
+            title: "Anda Belum diizinkan melaksanakan test tersebut",
+            timer: 5000,
+          }).then(() => {
+            navigateToTesPsikologi();
+          });
+          return;
+        }
+
+        if (
+          localStorage.getItem("title_active") &&
+          this.currentQuestion.first_id > questionNumber
+        ) {
+          Swal.fire({
+            icon: "warning",
+            title: "Anda tidak diizinkan mengakses halaman tersebut",
+            timer: 5000,
+          }).then(() => {
+            navigateToTesPsikologi();
+          });
+          return;
+        }
+      }
+
       try {
         const response = await axios.get(
           `https://api.abcompany.my.id/api/test/form/${questionNumber}/${studentId}`,
@@ -254,6 +342,7 @@ export default {
           question: questionData.question.question,
           choices: choices,
           last_id: questionData.last_id,
+          first_id: questionData.first_id,
         };
 
         if (questionData.student_answer !== null) {
@@ -262,7 +351,6 @@ export default {
           this.selectedAnswer = null;
         }
 
-        console.log(questionData);
         if (questionData.first_answers == null) {
           const now = new Date();
           if (localStorage.getItem("first_time_access") === null) {
@@ -347,14 +435,35 @@ export default {
       this.isLoading = false;
     },
     nextQuestion() {
-      const nextQuestionId = parseInt(this.currentQuestion.number) + 1;
-      if (nextQuestionId <= this.totalQuestions.length) {
+      if (this.currentQuestion.question_id == this.currentQuestion.last_id) {
+        // sweertalert anda yakin ingin menyelesaikan test
+        Swal.fire({
+          title: "Apakah Anda Yakin?",
+          text: "Anda akan menyelesaikan test ini",
+          icon: "warning",
+          showCancelButton: true,
+          confirmButtonColor: "#3085d6",
+          cancelButtonColor: "#d33",
+          confirmButtonText: "Ya, Selesaikan!",
+        }).then((result) => {
+          if (result.isConfirmed) {
+            localStorage.removeItem("first_time_access");
+            localStorage.removeItem("first_submit");
+            localStorage.removeItem("title_active");
+            this.$router.push({ name: "tes-psikologi" });
+          }
+        });
+      }
+      const nextQuestionId = parseInt(this.currentQuestion.question_id) + 1;
+      // console.log(this.currentQuestion.last_id);
+
+      if (nextQuestionId <= this.currentQuestion.last_id) {
         this.selectQuestion(nextQuestionId);
       }
     },
     prevQuestion() {
-      if (this.currentQuestion.number > 1) {
-        this.selectQuestion(this.currentQuestion.number - 1);
+      if (this.currentQuestion.question_id > 1) {
+        this.selectQuestion(this.currentQuestion.question_id - 1);
       }
     },
   },

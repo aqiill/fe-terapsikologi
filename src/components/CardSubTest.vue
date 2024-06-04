@@ -2,12 +2,15 @@
   <div class="col-6 col-md-3 mt-3">
     <div
       class="card box-sub-tes"
-      :class="{ disabled, 'bg-success': bgSuccess }"
+      :class="{ disabled: isDisabled, 'bg-success': bgSuccess }"
       @click="showAlert()"
     >
       <div class="card-img-container">
         <img :src="imgSrc" class="card-img-top p-3" :alt="imgAlt" />
         <div v-if="disabled" class="label-top">Selesai</div>
+        <div v-if="isDisabled && !disabled" class="label-top-dua">
+          Belum Diizinkan
+        </div>
       </div>
       <div class="card-body">
         <h5 class="card-title text-center">{{ title }}</h5>
@@ -28,9 +31,15 @@ export default {
     disabled: Boolean,
     bgSuccess: Boolean,
   },
+  computed: {
+    isDisabled() {
+      const activeTitle = localStorage.getItem("title_active");
+      return activeTitle !== null && activeTitle !== this.title;
+    },
+  },
   methods: {
     showAlert() {
-      if (this.disabled) {
+      if (this.isDisabled) {
         return;
       }
 
@@ -198,6 +207,7 @@ export default {
 
       Swal.fire(alertOptions).then((result) => {
         if (result.isConfirmed) {
+          localStorage.setItem("title_active", this.title);
           this.$router.push(redirectPath);
         }
       });
@@ -234,6 +244,18 @@ export default {
   right: 0;
   background-color: rgb(240, 191, 76);
   color: black;
+  padding: 5px 10px;
+  font-size: 0.9rem;
+  font-weight: bold;
+  border-radius: 0.25rem;
+}
+
+.label-top-dua {
+  position: absolute;
+  top: 0;
+  right: 0;
+  background-color: rgb(209, 30, 17);
+  color: white;
   padding: 5px 10px;
   font-size: 0.9rem;
   font-weight: bold;

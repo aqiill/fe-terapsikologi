@@ -47,6 +47,9 @@ import CardItem from "@/components/CardSubTest.vue";
 import md5 from "blueimp-md5";
 import axios from "axios";
 
+// Sweetalert2
+import Swal from "sweetalert2";
+
 export default {
   name: "SubTesPsikologiView",
   components: {
@@ -58,6 +61,20 @@ export default {
     this.id = JSON.parse(localStorage.getItem("user")).id;
     this.studentEmail = JSON.parse(localStorage.getItem("user")).student_email;
     this.studentEmailEncrypt = md5(this.studentEmail);
+
+    if (
+      localStorage.getItem("first_time_access") ||
+      localStorage.getItem("first_submit") === "true"
+    ) {
+      // alert("Selesaikan Sub Test Sebelumnya Terlebih Dahulu");
+      Swal.fire({
+        icon: "warning",
+        title: "Selesaikan Sub Test Terlebih Dahulu",
+        showConfirmButton: false,
+        timer: 3000,
+      });
+    }
+
     this.fetchTestData();
   },
   data() {
@@ -140,7 +157,7 @@ export default {
         }
 
         const now = new Date();
-        console.log("waktu sekarang", now);
+        // console.log("waktu sekarang", now);
 
         this.testItems.forEach((item) => {
           const answerTime = data.time_first_answers[item.key];
@@ -151,7 +168,7 @@ export default {
               createdAt = new Date(
                 createdAt.getTime() + 7 * 60 * 60 * 1000 + 10 * 60 * 1000
               );
-              console.log("waktu ocean", createdAt);
+              // console.log("waktu ocean", createdAt);
             } else {
               createdAt = new Date(
                 createdAt.getTime() + 7 * 60 * 60 * 1000 + 6 * 60 * 1000
