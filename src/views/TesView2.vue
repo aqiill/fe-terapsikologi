@@ -18,20 +18,21 @@
         <h5 class="text-center mt-3">Nomor Soal</h5>
         <div class="d-flex flex-wrap justify-content-center">
           <div
-            v-for="number in 60"
-            :key="number"
+            v-for="(question, index) in totalQuestions"
+            :key="question.id"
             class="p-2"
             style="width: 25%"
           >
             <button
               :class="{
-                'btn-warning': number === currentQuestion.number,
-                'btn-secondary': number !== currentQuestion.number,
+                'btn-warning': question.id == currentQuestion.question_id,
+                'btn-secondary': question.id !== currentQuestion.question_id,
+                'btn-primary': question.chosen == 1,
               }"
               class="btn btn-question w-100"
-              @click="selectQuestion(number)"
+              @click="selectQuestion(question.id)"
             >
-              {{ number }}
+              {{ index + 1 }}
             </button>
           </div>
         </div>
@@ -108,6 +109,9 @@
 </template>
 
 <script>
+import Swal from "sweetalert2";
+import axios from "axios";
+
 export default {
   data() {
     return {
@@ -127,15 +131,18 @@ export default {
           { value: "choice4", text: "Pilihan 4" },
         ],
       },
+      totalQuestions: [],
       minutes: 6,
       seconds: 0,
       isDesktopOrLandscape:
         window.innerWidth > 768 || window.innerHeight < window.innerWidth,
+      timeUpRedirected: false,
     };
   },
-  mounted() {
+  async mounted() {
     this.startTimer();
     window.addEventListener("resize", this.handleResize);
+    await this.loadQuestions();
   },
   beforeDestroy() {
     window.removeEventListener("resize", this.handleResize);
@@ -147,6 +154,20 @@ export default {
           if (this.minutes > 0) {
             this.minutes--;
             this.seconds = 59;
+          } else if (!this.timeUpRedirected) {
+            this.timeUpRedirected = true;
+            localStorage.removeItem("first_time_access");
+            localStorage.removeItem("first_submit");
+            localStorage.removeItem("title_active");
+            Swal.fire({
+              icon: "warning",
+              title: "Waktu Habis",
+              text: "Waktu untuk mengerjakan soal sudah habis.",
+            }).then(() => {
+              if (this.$route.name !== "tes-psikologi") {
+                this.$router.push({ name: "tes-psikologi" });
+              }
+            });
           }
         } else {
           this.seconds--;
@@ -157,6 +178,31 @@ export default {
       this.isDesktopOrLandscape =
         window.innerWidth > 768 || window.innerHeight < window.innerWidth;
     },
+    async loadQuestions() {
+      const questionNumber = parseInt(this.$route.params.id);
+      const studentId = JSON.parse(localStorage.getItem("user")).id;
+      try {
+        const response = await axios.get(
+          `https://api.abcompany.my.id/api/test/form/${questionNumber}/${studentId}`,
+          {
+            headers: {
+              "api-key": "qwe123qwe#",
+            },
+          }
+        );
+        console.log("Questions loaded:", response.data);
+        this.totalQuestions = response.data.total_question;
+        // this.loadQuestionFromRoute();
+      } catch (error) {
+        console.error("Error loading questions:", error);
+        Swal.fire({
+          icon: "error",
+          title: "Error",
+          text: "Gagal memuat soal. Silakan coba lagi.",
+        });
+      }
+    },
+
     selectQuestion(number) {
       this.currentQuestion = {
         number: number,

@@ -166,6 +166,7 @@ export default {
             allowOutsideClick: false,
             willClose: () => {
               clearInterval(this.countdownInterval);
+              localStorage.setItem("title_active", this.title);
               this.$router.push("/tes/bakat/287");
             },
           };
