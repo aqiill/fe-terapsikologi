@@ -97,7 +97,7 @@
               :disabled="isLoading"
             >
               <span v-if="isLoading">Loading...</span>
-              <span v-if="!isLoading">Selanjutnya</span>
+              <span v-if="!isLoading">Simpan, dan Lanjutkan</span>
               <i class="fa-solid fa-arrow-right"></i>
             </button>
 

@@ -25,10 +25,8 @@
           >
             <button
               :class="{
-                'btn-warning':
-                  question.id == currentQuestion.question.question_id,
-                'btn-secondary':
-                  question.id !== currentQuestion.question.question_id,
+                'btn-warning': question.id == currentQuestion.question.id,
+                'btn-secondary': question.id !== currentQuestion.question.id,
                 'btn-primary': question.chosen == 1,
               }"
               class="btn btn-question w-100"
@@ -103,8 +101,26 @@
             <button class="btn btn-secondary" @click="prevQuestion">
               <i class="fa-solid fa-arrow-left"></i> Kembali
             </button>
-            <button class="btn btn-primary" @click="nextQuestion">
-              Selanjutnya <i class="fa-solid fa-arrow-right"></i>
+            <button
+              v-if="currentQuestion.question_id < currentQuestion.last_id"
+              class="btn btn-primary"
+              @click="handleNextQuestion"
+              :disabled="isLoading"
+            >
+              <span v-if="isLoading">Loading...</span>
+              <span v-if="!isLoading">Simpan, dan Lanjutkan</span>
+              <i class="fa-solid fa-arrow-right"></i>
+            </button>
+
+            <button
+              v-if="currentQuestion.question_id == currentQuestion.last_id"
+              class="btn btn-warning"
+              @click="handleNextQuestion"
+              :disabled="isLoading"
+            >
+              <span v-if="isLoading">Loading...</span>
+              <span v-if="!isLoading">Selesaikan</span>
+              <i class="fa-solid fa-arrow-right"></i>
             </button>
           </div>
         </div>
@@ -132,6 +148,7 @@ export default {
         question_image: null,
         student_answer: null,
       },
+      selectedAnswer: null,
       selectedOption: null,
       totalQuestions: [],
       minutes: 6,
@@ -139,18 +156,28 @@ export default {
       isDesktopOrLandscape:
         window.innerWidth > 768 || window.innerHeight < window.innerWidth,
       timeUpRedirected: false,
+      isLoading: false,
     };
   },
   watch: {
+    $route(to, from) {
+      if (to.params.id !== from.params.id) {
+        this.loadQuestions();
+      }
+    },
     currentQuestion: {
       deep: true,
       handler(newQuestion) {
         if (newQuestion.student_answer !== null) {
           this.$nextTick(() => {
             this.selectedOption = newQuestion.student_answer;
+            this.selectedAnswer = newQuestion.student_answer;
           });
         }
       },
+    },
+    selectedOption(newOption) {
+      this.selectedAnswer = newOption;
     },
   },
   async mounted() {
@@ -202,6 +229,8 @@ export default {
             localStorage.removeItem("first_time_access");
             localStorage.removeItem("first_submit");
             localStorage.removeItem("title_active");
+            localStorage.removeItem("first_id");
+            localStorage.removeItem("last_id");
             Swal.fire({
               icon: "warning",
               title: "Waktu Habis",
@@ -224,6 +253,7 @@ export default {
     async loadQuestions() {
       const questionNumber = parseInt(this.$route.params.id);
       const studentId = JSON.parse(localStorage.getItem("user")).id;
+
       try {
         const response = await axios.get(
           `https://api.abcompany.my.id/api/test/form/${questionNumber}/${studentId}`,
@@ -238,6 +268,41 @@ export default {
 
         this.selectedOption = response.data.student_answer;
         this.totalQuestions = response.data.total_question;
+
+        localStorage.setItem("first_id", this.currentQuestion.first_id);
+        localStorage.setItem("last_id", this.currentQuestion.last_id);
+        if (this.currentQuestion.first_answers == null) {
+          const now = new Date();
+          if (localStorage.getItem("first_time_access") === null) {
+            localStorage.setItem("first_time_access", now);
+          }
+          const firstTimeAccess = new Date(
+            localStorage.getItem("first_time_access")
+          );
+
+          const sixMinutesLater = new Date(
+            firstTimeAccess.getTime() + 6 * 60 * 1000
+          );
+
+          this.minutes = Math.floor((sixMinutesLater - now) / 60000);
+          this.seconds = Math.floor((sixMinutesLater - now) / 1000) % 60;
+        } else {
+          const now = new Date();
+          const firstTimeAccessString =
+            this.currentQuestion.first_answers.replace(" ", "T");
+          const firstTimeAccess = new Date(firstTimeAccessString);
+
+          firstTimeAccess.setHours(firstTimeAccess.getHours() + 7);
+
+          const sixMinutesLater = new Date(
+            firstTimeAccess.getTime() + 6 * 60 * 1000
+          );
+
+          this.minutes = Math.floor((sixMinutesLater - now) / 60000);
+          this.seconds = Math.floor((sixMinutesLater - now) / 1000) % 60;
+        }
+
+        // console.log(this.currentQuestion.first_answers);
       } catch (error) {
         console.error("Error loading questions:", error);
         Swal.fire({
@@ -245,6 +310,41 @@ export default {
           title: "Error",
           text: "Gagal memuat soal. Silakan coba lagi.",
         });
+      }
+
+      const navigateToTesPsikologi = () => {
+        if (this.$route.name !== "tes-psikologi") {
+          this.$router.push({ name: "tes-psikologi" });
+        }
+      };
+
+      if (
+        localStorage.getItem("title_active") &&
+        localStorage.getItem("last_id") < questionNumber
+      ) {
+        Swal.fire({
+          icon: "warning",
+          title: "Anda Belum diizinkan melaksanakan test tersebut",
+          timer: 5000,
+        }).then(() => {
+          navigateToTesPsikologi();
+        });
+        return;
+      }
+
+      if (
+        localStorage.getItem("title_active") &&
+        questionNumber < localStorage.getItem("first_id")
+      ) {
+        // console.log("disni");
+        Swal.fire({
+          icon: "warning",
+          title: "Anda tidak diizinkan mengakses halaman tersebut",
+          timer: 5000,
+        }).then(() => {
+          navigateToTesPsikologi();
+        });
+        return;
       }
     },
 
@@ -262,14 +362,82 @@ export default {
           });
       }
     },
+    async submitAnswer() {
+      const questionId = this.currentQuestion.question_id;
+      const studentId = JSON.parse(localStorage.getItem("user")).id;
+
+      const now = localStorage.getItem("first_time_access");
+      let first_submit = localStorage.getItem("first_submit");
+      let isoDate;
+
+      if (!first_submit || first_submit === "false") {
+        isoDate = new Date(now).toISOString().replace("T", " ").split(".")[0];
+        localStorage.setItem("first_submit", true);
+      } else {
+        isoDate = new Date().toISOString().replace("T", " ").split(".")[0];
+      }
+
+      try {
+        await axios.post(
+          `https://api.abcompany.my.id/api/test/submit/${questionId}/${studentId}`,
+          {
+            answer: this.selectedAnswer,
+            created_at: isoDate,
+          },
+          {
+            headers: {
+              "api-key": "qwe123qwe#",
+            },
+          }
+        );
+      } catch (error) {
+        console.error("Error submitting answer:", error);
+        Swal.fire({
+          icon: "error",
+          title: "Error",
+          text: "Gagal mengirim jawaban. Silakan coba lagi.",
+        });
+      }
+    },
+    async handleNextQuestion() {
+      this.isLoading = true;
+      await this.submitAnswer();
+      this.nextQuestion();
+      this.loadQuestions();
+      this.isLoading = false;
+    },
     nextQuestion() {
-      if (this.currentQuestion.number < 60) {
-        this.selectQuestion(this.currentQuestion.number + 1);
+      if (this.currentQuestion.question_id == this.currentQuestion.last_id) {
+        // sweertalert anda yakin ingin menyelesaikan test
+        Swal.fire({
+          title: "Apakah Anda Yakin?",
+          text: "Anda akan menyelesaikan test ini",
+          icon: "warning",
+          showCancelButton: true,
+          confirmButtonColor: "#3085d6",
+          cancelButtonColor: "#d33",
+          confirmButtonText: "Ya, Selesaikan!",
+        }).then((result) => {
+          if (result.isConfirmed) {
+            localStorage.removeItem("first_time_access");
+            localStorage.removeItem("first_submit");
+            localStorage.removeItem("title_active");
+            localStorage.removeItem("first_id");
+            localStorage.removeItem("last_id");
+            this.$router.push({ name: "tes-psikologi" });
+          }
+        });
+      }
+      const nextQuestionId = parseInt(this.currentQuestion.question_id) + 1;
+      // console.log(this.currentQuestion.last_id);
+
+      if (nextQuestionId <= this.currentQuestion.last_id) {
+        this.selectQuestion(nextQuestionId);
       }
     },
     prevQuestion() {
-      if (this.currentQuestion.number > 1) {
-        this.selectQuestion(this.currentQuestion.number - 1);
+      if (this.currentQuestion.question_id > 1) {
+        this.selectQuestion(this.currentQuestion.question_id - 1);
       }
     },
   },
