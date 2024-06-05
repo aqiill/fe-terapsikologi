@@ -25,8 +25,10 @@
           >
             <button
               :class="{
-                'btn-warning': question.id == currentQuestion.question_id,
-                'btn-secondary': question.id !== currentQuestion.question_id,
+                'btn-warning':
+                  question.id == currentQuestion.question.question_id,
+                'btn-secondary':
+                  question.id !== currentQuestion.question.question_id,
                 'btn-primary': question.chosen == 1,
               }"
               class="btn btn-question w-100"
@@ -58,19 +60,24 @@
       <div class="container mt-5">
         <div class="question-box p-4">
           <div
-            v-if="currentQuestion.image"
+            v-if="currentQuestion.question.question_image"
             class="d-flex justify-content-center"
           >
             <img
-              :src="currentQuestion.image"
+              v-if="isSvg"
+              :src="currentQuestion.question.question_image"
               alt="Question Image"
               class="img-fluid mb-3"
             />
+            <p v-else>{{ currentQuestion.question.question_image }}</p>
           </div>
-          <h4>{{ currentQuestion.text }}</h4>
+          <h4>
+            {{ currentQuestion.number }}.
+            {{ currentQuestion.question.question }}
+          </h4>
           <div class="mt-3 d-flex justify-content-center flex-wrap">
             <div
-              v-for="choice in currentQuestion.choices"
+              v-for="choice in answerOptions"
               :key="choice.value"
               class="form-check m-2"
             >
@@ -80,6 +87,7 @@
                 :name="'question' + currentQuestion.number"
                 :id="'choice' + choice.value"
                 :value="choice.value"
+                v-model="selectedOption"
               />
               <label class="form-check-label" :for="'choice' + choice.value">
                 <div v-if="choice.image">
@@ -116,21 +124,15 @@ export default {
   data() {
     return {
       currentQuestion: {
+        question_id: null,
         number: 1,
-        text: "Jika kubus kita putar satu kali ke arah kiri, satu kali. Bentuk kubus yang baru adalah",
-        image:
-          "https://raw.githubusercontent.com/kojolahsandboxcorp/TerapsAssets/7882457ecc27bb816cfe4bf94632244ab8bf1eb6/soal-3/3.svg", // URL gambar soal (opsional)
-        choices: [
-          { value: "choice1", text: "Pilihan 1" },
-          {
-            value: "choice2",
-            text: "Pilihan 2",
-            image: "https://example.com/choice2.png",
-          },
-          { value: "choice3", text: "Pilihan 3" },
-          { value: "choice4", text: "Pilihan 4" },
-        ],
+        question: "",
+        last_id: null,
+        first_id: null,
+        question_image: null,
+        student_answer: null,
       },
+      selectedOption: null,
       totalQuestions: [],
       minutes: 6,
       seconds: 0,
@@ -139,6 +141,18 @@ export default {
       timeUpRedirected: false,
     };
   },
+  watch: {
+    currentQuestion: {
+      deep: true,
+      handler(newQuestion) {
+        if (newQuestion.student_answer !== null) {
+          this.$nextTick(() => {
+            this.selectedOption = newQuestion.student_answer;
+          });
+        }
+      },
+    },
+  },
   async mounted() {
     this.startTimer();
     window.addEventListener("resize", this.handleResize);
@@ -146,6 +160,35 @@ export default {
   },
   beforeDestroy() {
     window.removeEventListener("resize", this.handleResize);
+  },
+  computed: {
+    answerOptions() {
+      if (!this.currentQuestion || !this.currentQuestion.question) {
+        return [];
+      }
+
+      if (this.currentQuestion.answer_choices) {
+        const optionLabels = ["a", "b", "c", "d", "e"];
+        return Object.keys(this.currentQuestion.answer_choices)
+          .filter((key) => key.startsWith("option"))
+          .map((key, index) => {
+            const optionText = this.currentQuestion.answer_choices[key];
+            const isImageUrl = /^https?:\/\/raw\.githubusercontent\.com\//.test(
+              optionText
+            );
+            return {
+              value: optionLabels[index],
+              text: optionText,
+              image: isImageUrl ? optionText : null,
+            };
+          });
+      }
+      return [];
+    },
+    isSvg() {
+      const imageUrl = this.currentQuestion.question.question_image;
+      return imageUrl && imageUrl.endsWith(".svg");
+    },
   },
   methods: {
     startTimer() {
@@ -190,9 +233,11 @@ export default {
             },
           }
         );
-        console.log("Questions loaded:", response.data);
+
+        this.currentQuestion = response.data;
+
+        this.selectedOption = response.data.student_answer;
         this.totalQuestions = response.data.total_question;
-        // this.loadQuestionFromRoute();
       } catch (error) {
         console.error("Error loading questions:", error);
         Swal.fire({
@@ -204,25 +249,18 @@ export default {
     },
 
     selectQuestion(number) {
-      this.currentQuestion = {
-        number: number,
-        text: `Contoh soal nomor ${number}?`,
-        image:
-          number % 2 === 0
-            ? "https://raw.githubusercontent.com/kojolahsandboxcorp/TerapsAssets/7882457ecc27bb816cfe4bf94632244ab8bf1eb6/soal-3/3.svg"
-            : null, // Contoh kondisi untuk gambar soal
-        choices: [
-          { value: "choice1", text: "Pilihan 1" },
-          {
-            value: "choice2",
-            text: "Pilihan 2",
-            image:
-              "https://raw.githubusercontent.com/kojolahsandboxcorp/TerapsAssets/f8946186f03e0be3d8d7db37d6ecc047f1ec15bb/jawaban-3/28-3.svg",
-          },
-          { value: "choice3", text: "Pilihan 3" },
-          { value: "choice4", text: "Pilihan 4" },
-        ],
-      };
+      if (this.$route.params.id !== String(number)) {
+        this.$router
+          .push({
+            name: "tes-bakat",
+            params: { id: number },
+          })
+          .catch((err) => {
+            if (err.name !== "NavigationDuplicated") {
+              console.error(err);
+            }
+          });
+      }
     },
     nextQuestion() {
       if (this.currentQuestion.number < 60) {
