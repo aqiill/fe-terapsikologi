@@ -33,10 +33,21 @@
                 v-model="login.password"
               />
             </div>
-            <button type="submit" class="btn btn-primary mb-3">Masuk</button>
+            <button
+              type="submit"
+              class="btn btn-primary mb-3"
+              :disabled="isLoading"
+            >
+              <span v-if="isLoading">Loading...</span>
+              <span v-if="!isLoading">Masuk</span>
+            </button>
           </form>
           <div class="text-center">
-            <button class="btn btn-link" @click="toggleRegister(true)">
+            <button
+              type="submit"
+              class="btn btn-link"
+              @click="toggleRegister(true)"
+            >
               Belum Punya Akun? Buat Akun
             </button>
           </div>
@@ -81,8 +92,12 @@
                 v-model="register.school"
                 @change="checkSchool"
               >
-                <option v-for="school in schools" :key="school" :value="school">
-                  {{ school }}
+                <option
+                  v-for="school in schools"
+                  :key="school.id"
+                  :value="school.id"
+                >
+                  {{ school.school_name.toUpperCase() }}
                 </option>
                 <option value="other">Lainnya...</option>
               </select>
@@ -93,11 +108,22 @@
                 type="text"
                 class="form-control mb-3"
                 id="otherSchool"
-                v-model="register.otherSchool"
+                v-model="register.manualSchoolName"
               />
             </div>
-            <button type="submit" class="btn btn-secondary">Daftar</button>
-            <button class="btn btn-link" @click="toggleRegister(false)">
+            <button
+              type="submit"
+              class="btn btn-secondary"
+              :disabled="isLoading"
+            >
+              <span v-if="isLoading">Loading...</span>
+              <span v-if="!isLoading">Daftar</span>
+            </button>
+            <button
+              type="button"
+              class="btn btn-link"
+              @click="toggleRegister(false)"
+            >
               Kembali ke Login
             </button>
           </form>
@@ -125,19 +151,45 @@ export default {
         password: "",
         finalScore: null,
         school: "",
-        otherSchool: "",
+        manualSchoolName: "",
       },
       showRegister: false,
-      schools: ["SMA Negeri 1", "SMA Negeri 2", "SMA Negeri 3", "SMP Negeri 4"],
+      schools: [],
+      isLoading: false,
     };
   },
   methods: {
+    async fetchSchools() {
+      try {
+        const response = await axios.get(
+          "http://be-terapsikologi.test/api/schools",
+          {
+            headers: {
+              "api-key": "qwe123qwe#",
+            },
+          }
+        );
+        this.schools = response.data;
+      } catch (error) {
+        console.error("Failed to fetch schools:", error);
+        Swal.fire("Error", "Failed to load school data.", "error");
+      }
+    },
     async handleLogin() {
+      if (!this.login.email || !this.login.password) {
+        Swal.fire(
+          "Login Gagal!",
+          "Harap isi semua bidang yang diperlukan.",
+          "warning"
+        );
+        return;
+      }
       const loginData = {
         email: this.login.email,
         password: this.login.password,
       };
 
+      this.isLoading = true;
       try {
         const response = await axios.post("/api/login", loginData);
         if (response.data.message === "Login successful") {
@@ -149,19 +201,76 @@ export default {
         }
       } catch (error) {
         Swal.fire("Login Gagal!", "Email atau Password salah!", "error");
+      } finally {
+        this.isLoading = false;
       }
     },
-    handleRegister() {
-      console.log("Registration Data:", this.register);
+    async handleRegister() {
+      this.isLoading = true;
+      const registrationData = {
+        email: this.register.email,
+        password: this.register.password,
+        final_score: this.register.finalScore,
+        school: this.register.school === "other" ? null : this.register.school,
+        manual_school_name:
+          this.register.school === "other"
+            ? this.register.manualSchoolName
+            : "",
+      };
+
+      try {
+        const response = await axios.post(
+          "https://api.abcompany.my.id/api/register",
+          registrationData,
+          {
+            headers: {
+              "api-key": "qwe123qwe#",
+            },
+          }
+        );
+
+        if (response.data.message === "Registration successful") {
+          Swal.fire("Registrasi Berhasil!", "", "success");
+          this.toggleRegister(false);
+        } else {
+          Swal.fire("Registrasi Gagal!", response.data.error, "error");
+        }
+      } catch (error) {
+        Swal.fire(
+          "Registration Failed",
+          error.response.data.message || "An error occurred.",
+          "error"
+        );
+      } finally {
+        this.isLoading = false;
+      }
     },
     checkSchool() {
       if (this.register.school !== "other") {
-        this.register.otherSchool = "";
+        this.register.manualSchoolName = "";
       }
     },
     toggleRegister(show) {
       this.showRegister = show;
+      if (show) {
+        this.fetchSchools();
+      } else {
+        this.resetFormData();
+      }
     },
+    resetFormData() {
+      this.login.email = "";
+      this.login.password = "";
+      this.register.email = "";
+      this.register.password = "";
+      this.register.finalScore = null;
+      this.register.school = "";
+      this.register.manualSchoolName = "";
+      this.isLoading = false;
+    },
+  },
+  created() {
+    this.fetchSchools();
   },
 };
 </script>
