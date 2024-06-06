@@ -156,7 +156,7 @@
           <div class="row">
             <div class="col-12 col-md-6 mt-2">
               <div class="card">
-                <di class="card-header">Openness to Experience: Rendah </di>
+                <div class="card-header">Openness to Experience: Rendah</div>
                 <div class="card-body">
                   <p>
                     Openness to Experience adalah keinginan seseorang untuk
@@ -170,7 +170,7 @@
 
             <div class="col-12 col-md-6 mt-2">
               <div class="card">
-                <di class="card-header">Conscientiousness: Tinggi </di>
+                <div class="card-header">Conscientiousness: Tinggi</div>
                 <div class="card-body">
                   <p>
                     Conscientiousness adalah keinginan seseorang untuk mencapai
@@ -184,7 +184,7 @@
 
             <div class="col-12 col-md-6 mt-2">
               <div class="card">
-                <di class="card-header">Extraversion: Tinggi </di>
+                <div class="card-header">Extraversion: Tinggi</div>
                 <div class="card-body">
                   <p>
                     Extraversion adalah keinginan seseorang untuk berinteraksi
@@ -198,7 +198,7 @@
 
             <div class="col-12 col-md-6 mt-2">
               <div class="card">
-                <di class="card-header">Agreeableness: Sangat Tinggi </di>
+                <div class="card-header">Agreeableness: Sangat Tinggi</div>
                 <div class="card-body">
                   <p>
                     Agreeableness adalah keinginan seseorang untuk membantu
@@ -212,7 +212,7 @@
 
             <div class="col-12 col-md-6 mt-2">
               <div class="card">
-                <di class="card-header">Neuroticism: Tinggi </di>
+                <div class="card-header">Neuroticism: Tinggi</div>
                 <div class="card-body">
                   <p>
                     Neuroticism adalah kecenderungan seseorang untuk merasa
@@ -239,7 +239,7 @@
           <div class="row">
             <div class="col-12 col-md-6 mt-2">
               <div class="card">
-                <di class="card-header">Realistic: Tinggi </di>
+                <div class="card-header">Realistic: Tinggi</div>
                 <div class="card-body">
                   <p>
                     Realistic adalah minat seseorang terhadap aktivitas fisik
@@ -252,7 +252,7 @@
 
             <div class="col-12 col-md-6 mt-2">
               <div class="card">
-                <di class="card-header">Investigative: Rendah</di>
+                <div class="card-header">Investigative: Rendah</div>
                 <div class="card-body">
                   <p>
                     Investigative adalah minat seseorang terhadap penelitian dan
@@ -265,7 +265,7 @@
 
             <div class="col-12 col-md-6 mt-2">
               <div class="card">
-                <di class="card-header">Artistic: Tinggi </di>
+                <div class="card-header">Artistic: Tinggi</div>
                 <div class="card-body">
                   <p>
                     Artistic adalah minat seseorang terhadap kreativitas dan
@@ -278,7 +278,7 @@
 
             <div class="col-12 col-md-6 mt-2">
               <div class="card">
-                <di class="card-header">Social: Tinggi </di>
+                <div class="card-header">Social: Tinggi</div>
                 <div class="card-body">
                   <p>
                     Social adalah minat seseorang terhadap interaksi sosial dan
@@ -292,7 +292,7 @@
 
             <div class="col-12 col-md-6 mt-2">
               <div class="card">
-                <di class="card-header">Enterprising: Rendah </di>
+                <div class="card-header">Enterprising: Rendah</div>
                 <div class="card-body">
                   <p>
                     Enterprising adalah minat seseorang terhadap kepemimpinan
@@ -306,7 +306,7 @@
 
             <div class="col-12 col-md-6 mt-2">
               <div class="card">
-                <di class="card-header">Conventional: Tinggi </di>
+                <div class="card-header">Conventional: Tinggi</div>
                 <div class="card-body">
                   <p>
                     Conventional adalah minat seseorang terhadap rutinitas dan
@@ -336,7 +336,7 @@
           <div class="row">
             <div class="col-12 col-md-6 mt-2">
               <div class="card">
-                <di class="card-header">Memori: Tinggi</di>
+                <div class="card-header">Memori: Tinggi</div>
                 <div class="card-body">
                   <p>
                     Memori adalah kemampuan seseorang untuk mengingat informasi
@@ -350,7 +350,7 @@
 
             <div class="col-12 col-md-6 mt-2">
               <div class="card">
-                <di class="card-header">Math Achivement: Rendah</di>
+                <div class="card-header">Math Achivement: Rendah</div>
                 <div class="card-body">
                   <p>
                     Math Achivement adalah kemampuan seseorang dalam matematika
@@ -363,7 +363,7 @@
 
             <div class="col-12 col-md-6 mt-2">
               <div class="card">
-                <di class="card-header">Induction: Rendah </di>
+                <div class="card-header">Induction: Rendah</div>
                 <div class="card-body">
                   <p>
                     Induction adalah kemampuan seseorang dalam menarik
@@ -377,7 +377,7 @@
 
             <div class="col-12 col-md-6 mt-2">
               <div class="card">
-                <di class="card-header">Quantitative Reasoning: Tinggi </di>
+                <div class="card-header">Quantitative Reasoning: Tinggi</div>
                 <div class="card-body">
                   <p>
                     Quantitative Reasoning adalah kemampuan seseorang dalam
@@ -390,7 +390,7 @@
 
             <div class="col-12 col-md-6 mt-2">
               <div class="card">
-                <di class="card-header">Visualization: Rendah </di>
+                <div class="card-header">Visualization: Rendah</div>
                 <div class="card-body">
                   <p>
                     Visualization adalah kemampuan seseorang dalam membayangkan
@@ -404,7 +404,7 @@
 
             <div class="col-12 col-md-6 mt-2">
               <div class="card">
-                <di class="card-header">Reading: Rendah </di>
+                <div class="card-header">Reading: Rendah</div>
                 <div class="card-body">
                   <p>
                     Reading adalah kemampuan seseorang dalam memahami dan
@@ -434,6 +434,27 @@ export default {
   components: {
     NavBar,
     FooterCom,
+  },
+  mounted() {
+    this.student_name = JSON.parse(localStorage.getItem("user")).student_name;
+    this.province = JSON.parse(localStorage.getItem("user")).province;
+    this.city = JSON.parse(localStorage.getItem("user")).city;
+    this.gender = JSON.parse(localStorage.getItem("user")).gender;
+    this.contact = JSON.parse(localStorage.getItem("user")).contact;
+    this.birth_date = JSON.parse(localStorage.getItem("user")).birth_date;
+    this.address = JSON.parse(localStorage.getItem("user")).address;
+
+    if (
+      this.student_name == null ||
+      this.province == null ||
+      this.city == null ||
+      this.gender == null ||
+      this.contact == null ||
+      this.birth_date == null ||
+      this.address == null
+    ) {
+      this.$router.push("/profile");
+    }
   },
 };
 </script>

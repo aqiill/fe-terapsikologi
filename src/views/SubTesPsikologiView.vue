@@ -58,6 +58,26 @@ export default {
     CardItem,
   },
   mounted() {
+    this.student_name = JSON.parse(localStorage.getItem("user")).student_name;
+    this.province = JSON.parse(localStorage.getItem("user")).province;
+    this.city = JSON.parse(localStorage.getItem("user")).city;
+    this.gender = JSON.parse(localStorage.getItem("user")).gender;
+    this.contact = JSON.parse(localStorage.getItem("user")).contact;
+    this.birth_date = JSON.parse(localStorage.getItem("user")).birth_date;
+    this.address = JSON.parse(localStorage.getItem("user")).address;
+
+    if (
+      this.student_name == null ||
+      this.province == null ||
+      this.city == null ||
+      this.gender == null ||
+      this.contact == null ||
+      this.birth_date == null ||
+      this.address == null
+    ) {
+      this.$router.push("/profile");
+    }
+
     this.id = JSON.parse(localStorage.getItem("user")).id;
     this.studentEmail = JSON.parse(localStorage.getItem("user")).student_email;
     this.studentEmailEncrypt = md5(this.studentEmail);
