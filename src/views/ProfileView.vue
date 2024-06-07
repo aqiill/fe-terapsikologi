@@ -64,13 +64,13 @@
                 <select
                   class="form-select"
                   id="province"
-                  v-model="user.province"
+                  v-model="user.provinceId"
                   @change="updateCities"
                 >
                   <option
                     v-for="province in provinces"
                     :key="province.id"
-                    :value="province.name"
+                    :value="province.id"
                   >
                     {{ province.name }}
                   </option>
@@ -78,11 +78,11 @@
               </div>
               <div class="col-12 col-md-6 mb-3">
                 <label for="city" class="form-label">Pilihan Kota</label>
-                <select class="form-select" id="city" v-model="user.city">
+                <select class="form-select" id="city" v-model="user.cityId">
                   <option
                     v-for="city in cities"
                     :key="city.id"
-                    :value="city.name"
+                    :value="city.id"
                   >
                     {{ city.name }}
                   </option>
@@ -98,24 +98,29 @@
                 />
               </div>
               <div class="col-12 col-md-6 mb-3">
-                <label for="whatsapp" class="form-label">Kontak Whatsapp</label>
+                <label for="contact" class="form-label">Kontak</label>
                 <input
                   type="tel"
                   class="form-control"
-                  id="whatsapp"
-                  v-model="user.whatsapp"
+                  id="contact"
+                  v-model="user.contact"
                 />
               </div>
               <div class="col-12 mb-3">
                 <label for="gender" class="form-label">Jenis Kelamin</label>
                 <select class="form-select" id="gender" v-model="user.gender">
-                  <option value="male">Pria</option>
-                  <option value="female">Wanita</option>
+                  <option value="M">Laki-Laki</option>
+                  <option value="F">Perempuan</option>
                 </select>
               </div>
               <div class="col-12">
-                <button type="submit" class="btn btn-primary float-end">
-                  Simpan Perubahan
+                <button
+                  type="submit"
+                  class="btn btn-primary float-end"
+                  :disabled="isLoading"
+                >
+                  <span v-if="isLoading">Loading...</span>
+                  <span v-if="!isLoading">Simpan Perubahan</span>
                 </button>
               </div>
             </div>
@@ -188,64 +193,137 @@
 </template>
 
 <script>
-// @ is an alias to /src
+import Papa from "papaparse";
+import axios from "axios"; // Tambahkan axios untuk melakukan HTTP request
 import NavBar from "@/components/NavBar.vue";
 import FooterCom from "@/components/FooterCom.vue";
+import Swal from "sweetalert2";
 
 export default {
-  name: "ReportView",
+  name: "ProfileView",
   components: {
     NavBar,
     FooterCom,
   },
   data() {
+    const userData = JSON.parse(localStorage.getItem("user"));
     return {
       user: {
-        name: "",
-        finalScore: null,
-        email: "",
-        address: "",
-        province: "",
-        city: "",
-        school: "SMA Negeri 1",
-        birthdate: "",
-        whatsapp: "",
-        gender: "",
+        name: userData.student_name,
+        finalScore: userData.final_score,
+        email: userData.student_email,
+        address: userData.address,
+        provinceId: userData.province || null,
+        cityId: userData.city || null,
+        birthdate: userData.birth_date,
+        contact: userData.contact,
+        gender: userData.gender,
       },
-      provinces: [
-        { id: 1, name: "Jawa Barat" },
-        { id: 2, name: "Jawa Timur" },
-      ],
+      provinces: [],
       cities: [],
       passwords: {
         current: "",
         new: "",
         confirm: "",
       },
+      isLoading: false,
     };
   },
   methods: {
+    loadProvinces() {
+      Papa.parse("/provinces.csv", {
+        download: true,
+        header: true,
+        complete: (results) => {
+          this.provinces = results.data;
+          if (this.user.provinceId) {
+            this.updateCities();
+          }
+        },
+      });
+    },
     updateCities() {
-      if (this.user.province === "Jawa Barat") {
-        this.cities = [
-          { id: 1, name: "Bandung" },
-          { id: 2, name: "Bekasi" },
-        ];
-      } else if (this.user.province === "Jawa Timur") {
-        this.cities = [
-          { id: 3, name: "Surabaya" },
-          { id: 4, name: "Malang" },
-        ];
-      } else {
+      if (!this.user.provinceId) {
         this.cities = [];
+        return;
       }
+
+      Papa.parse("/cities.csv", {
+        download: true,
+        header: true,
+        complete: (results) => {
+          this.cities = results.data.filter(
+            (city) => city.province_id === this.user.provinceId
+          );
+        },
+      });
     },
     handleSubmit() {
-      console.log("Form Submitted:", this.user);
+      this.isLoading = true;
+      const studentId = JSON.parse(localStorage.getItem("user")).id; // Mengambil student_id
+      axios
+        .post(
+          `https://api.abcompany.my.id/api/profile/${studentId}`,
+          {
+            student_name: this.user.name,
+            final_score: this.user.finalScore,
+            student_email: this.user.email,
+            address: this.user.address,
+            province: this.user.provinceId,
+            city: this.user.cityId,
+            birth_date: this.user.birthdate,
+            gender: this.user.gender,
+            contact: this.user.contact,
+          },
+          {
+            headers: {
+              "api-key": "qwe123qwe#",
+            },
+          }
+        )
+        .then(() => {
+          // update localStorage user
+          const userData = JSON.parse(localStorage.getItem("user"));
+          localStorage.setItem(
+            "user",
+            JSON.stringify({
+              ...userData,
+              student_name: this.user.name,
+              final_score: this.user.finalScore,
+              student_email: this.user.email,
+              address: this.user.address,
+              province: this.user.provinceId,
+              city: this.user.cityId,
+              birth_date: this.user.birthdate,
+              gender: this.user.gender,
+              contact: this.user.contact,
+            })
+          );
+
+          Swal.fire({
+            icon: "success",
+            title: "Profil berhasil diperbaharui",
+            showConfirmButton: false,
+            timer: 3000,
+          });
+          this.isLoading = false;
+        })
+        .catch((error) => {
+          console.error("Error updating profile:", error);
+          Swal.fire({
+            icon: "error",
+            title: "Gagal memperbaharui profil",
+            showConfirmButton: false,
+            timer: 3000,
+          });
+        });
     },
     handlePasswordChange() {
       console.log("Password Changed:", this.passwords);
     },
+  },
+  mounted() {
+    this.loadProvinces();
   },
 };
 </script>

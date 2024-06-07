@@ -161,14 +161,11 @@ export default {
   methods: {
     async fetchSchools() {
       try {
-        const response = await axios.get(
-          "http://be-terapsikologi.test/api/schools",
-          {
-            headers: {
-              "api-key": "qwe123qwe#",
-            },
-          }
-        );
+        const response = await axios.get("/api/schools", {
+          headers: {
+            "api-key": "qwe123qwe#",
+          },
+        });
         this.schools = response.data;
       } catch (error) {
         console.error("Failed to fetch schools:", error);
