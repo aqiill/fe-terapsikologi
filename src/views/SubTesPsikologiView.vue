@@ -6,7 +6,11 @@
       <!-- profile -->
       <div class="circle-container">
         <img
-          src="https://www.gravatar.com/avatar/${studentEmailEncrypt}?d=identicon"
+          :src="
+            'https://www.gravatar.com/avatar/' +
+            studentEmailEncrypt +
+            '?d=identicon'
+          "
           alt="Profil Pengguna"
           class="img-fluid rounded-circle"
         />
@@ -20,7 +24,12 @@
         mengetahui kepribadian, minat, serta bakatmu.
       </h5>
 
-      <p class="text-center mt-5">Lakukan Semua Tes dibawah ini!</p>
+      <div v-if="allTestsDisabled" class="text-center mt-5">
+        <button class="btn btn-primary mb-5" @click="report()">
+          <i class="fa-regular fa-envelope"></i> Lihat Hasil Tes
+        </button>
+      </div>
+      <p v-else class="text-center mt-5">Lakukan Semua Tes dibawah ini!</p>
 
       <div class="row">
         <CardItem
@@ -56,46 +65,6 @@ export default {
     NavBar,
     FooterCom,
     CardItem,
-  },
-  mounted() {
-    this.student_name = JSON.parse(localStorage.getItem("user")).student_name;
-    this.province = JSON.parse(localStorage.getItem("user")).province;
-    this.city = JSON.parse(localStorage.getItem("user")).city;
-    this.gender = JSON.parse(localStorage.getItem("user")).gender;
-    this.contact = JSON.parse(localStorage.getItem("user")).contact;
-    this.birth_date = JSON.parse(localStorage.getItem("user")).birth_date;
-    this.address = JSON.parse(localStorage.getItem("user")).address;
-
-    if (
-      this.student_name == null ||
-      this.province == null ||
-      this.city == null ||
-      this.gender == null ||
-      this.contact == null ||
-      this.birth_date == null ||
-      this.address == null
-    ) {
-      this.$router.push("/profile");
-    }
-
-    this.id = JSON.parse(localStorage.getItem("user")).id;
-    this.studentEmail = JSON.parse(localStorage.getItem("user")).student_email;
-    this.studentEmailEncrypt = md5(this.studentEmail);
-
-    if (
-      localStorage.getItem("first_time_access") ||
-      localStorage.getItem("first_submit") === "true"
-    ) {
-      // alert("Selesaikan Sub Test Sebelumnya Terlebih Dahulu");
-      Swal.fire({
-        icon: "warning",
-        title: "Selesaikan Sub Test Terlebih Dahulu",
-        showConfirmButton: false,
-        timer: 3000,
-      });
-    }
-
-    this.fetchTestData();
   },
   data() {
     return {
@@ -162,7 +131,54 @@ export default {
       ],
     };
   },
+  computed: {
+    allTestsDisabled() {
+      return this.testItems.every((item) => item.disabled);
+    },
+  },
+  mounted() {
+    this.student_name = JSON.parse(localStorage.getItem("user")).student_name;
+    this.province = JSON.parse(localStorage.getItem("user")).province;
+    this.city = JSON.parse(localStorage.getItem("user")).city;
+    this.gender = JSON.parse(localStorage.getItem("user")).gender;
+    this.contact = JSON.parse(localStorage.getItem("user")).contact;
+    this.birth_date = JSON.parse(localStorage.getItem("user")).birth_date;
+    this.address = JSON.parse(localStorage.getItem("user")).address;
+
+    if (
+      this.student_name == null ||
+      this.province == null ||
+      this.city == null ||
+      this.gender == null ||
+      this.contact == null ||
+      this.birth_date == null ||
+      this.address == null
+    ) {
+      this.$router.push("/profile");
+    }
+
+    this.id = JSON.parse(localStorage.getItem("user")).id;
+    this.studentEmail = JSON.parse(localStorage.getItem("user")).student_email;
+    this.studentEmailEncrypt = md5(this.studentEmail);
+
+    if (
+      localStorage.getItem("first_time_access") ||
+      localStorage.getItem("first_submit") === "true"
+    ) {
+      Swal.fire({
+        icon: "warning",
+        title: "Selesaikan Sub Test Terlebih Dahulu",
+        showConfirmButton: false,
+        timer: 3000,
+      });
+    }
+
+    this.fetchTestData();
+  },
   methods: {
+    report() {
+      this.$router.push("/report");
+    },
     async fetchTestData() {
       try {
         const response = await axios.get(
@@ -170,14 +186,11 @@ export default {
         );
         const data = response.data;
 
-        // console.log(data);
-
         if (data.least_time === null) {
           return;
         }
 
         const now = new Date();
-        // console.log("waktu sekarang", now);
 
         this.testItems.forEach((item) => {
           const answerTime = data.time_first_answers[item.key];
@@ -188,7 +201,6 @@ export default {
               createdAt = new Date(
                 createdAt.getTime() + 7 * 60 * 60 * 1000 + 10 * 60 * 1000
               );
-              // console.log("waktu ocean", createdAt);
             } else {
               createdAt = new Date(
                 createdAt.getTime() + 7 * 60 * 60 * 1000 + 6 * 60 * 1000

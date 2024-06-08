@@ -3,7 +3,7 @@
     <div
       class="card box-sub-tes"
       :class="{ disabled: isDisabled, 'bg-success': bgSuccess }"
-      @click="showAlert()"
+      @click="disabled ? null : showAlert()"
     >
       <div class="card-img-container">
         <img :src="imgSrc" class="card-img-top p-3" :alt="imgAlt" />
