@@ -177,7 +177,15 @@ export default {
   },
   methods: {
     report() {
-      this.$router.push("/report");
+      if (this.allTestsDisabled) {
+        this.$router.push("/report");
+      } else {
+        Swal.fire({
+          icon: "warning",
+          title: "Harap selesaikan semua tes terlebih dahulu",
+          showConfirmButton: true,
+        });
+      }
     },
     async fetchTestData() {
       try {

@@ -1,22 +1,9 @@
 <template>
-  <div class="home">
+  <div class="home" v-if="allTestsDisabled">
     <NavBar />
 
     <div class="container mt-5">
       <div class="row">
-        <!-- <div class="col-12">
-          <div class="circle-container">
-            <img
-              src="https://www.gravatar.com/avatar/423423442424242223232?d=mp&s=100"
-              alt="Profil Pengguna"
-              class="img-fluid rounded-circle"
-            />
-          </div>
-          <h3 class="text-center">Aqil Rahman</h3>
-
-          <hr />
-        </div> -->
-
         <div class="col-12">
           <img
             src="../assets/images/rekomendasi.svg"
@@ -428,6 +415,8 @@
 // @ is an alias to /src
 import NavBar from "@/components/NavBar.vue";
 import FooterCom from "@/components/FooterCom.vue";
+import axios from "axios";
+import Swal from "sweetalert2";
 
 export default {
   name: "ReportView",
@@ -435,14 +424,27 @@ export default {
     NavBar,
     FooterCom,
   },
-  mounted() {
-    this.student_name = JSON.parse(localStorage.getItem("user")).student_name;
-    this.province = JSON.parse(localStorage.getItem("user")).province;
-    this.city = JSON.parse(localStorage.getItem("user")).city;
-    this.gender = JSON.parse(localStorage.getItem("user")).gender;
-    this.contact = JSON.parse(localStorage.getItem("user")).contact;
-    this.birth_date = JSON.parse(localStorage.getItem("user")).birth_date;
-    this.address = JSON.parse(localStorage.getItem("user")).address;
+  data() {
+    return {
+      allTestsDisabled: false,
+      student_name: "",
+      province: "",
+      city: "",
+      gender: "",
+      contact: "",
+      birth_date: "",
+      address: "",
+    };
+  },
+  async mounted() {
+    const user = JSON.parse(localStorage.getItem("user"));
+    this.student_name = user.student_name;
+    this.province = user.province;
+    this.city = user.city;
+    this.gender = user.gender;
+    this.contact = user.contact;
+    this.birth_date = user.birth_date;
+    this.address = user.address;
 
     if (
       this.student_name == null ||
@@ -454,7 +456,82 @@ export default {
       this.address == null
     ) {
       this.$router.push("/profile");
+      return;
     }
+
+    await this.checkAllTestsDisabled(user.id);
+  },
+  methods: {
+    async checkAllTestsDisabled(userId) {
+      try {
+        const response = await axios.get(
+          `https://api.abcompany.my.id/api/test/${userId}`
+        );
+        const data = response.data;
+        if (data.least_time === null) {
+          this.redirectToSubTesPsikologi();
+          return;
+        }
+
+        const now = new Date();
+        let allDisabled = true;
+
+        const testItems = [
+          "ocean",
+          "riasec",
+          "visual",
+          "induction",
+          "quatitative_reasoning",
+          "math",
+          "reading",
+          "memory",
+        ];
+
+        for (const key of testItems) {
+          const answerTime = data.time_first_answers[key];
+          if (answerTime) {
+            let createdAt = new Date(answerTime.created_at);
+
+            if (key === "ocean" || key === "riasec") {
+              createdAt = new Date(
+                createdAt.getTime() + 7 * 60 * 60 * 1000 + 10 * 60 * 1000
+              );
+            } else {
+              createdAt = new Date(
+                createdAt.getTime() + 7 * 60 * 60 * 1000 + 6 * 60 * 1000
+              );
+            }
+
+            if (now <= createdAt) {
+              allDisabled = false;
+              break;
+            }
+          } else {
+            allDisabled = false;
+            break;
+          }
+        }
+
+        if (!allDisabled) {
+          this.redirectToSubTesPsikologi();
+        } else {
+          this.allTestsDisabled = true;
+        }
+      } catch (error) {
+        console.error("Error checking test data:", error);
+      }
+    },
+    redirectToSubTesPsikologi() {
+      Swal.fire({
+        icon: "warning",
+        title: "Peringatan",
+        text: "Harap selesaikan semua tes terlebih dahulu",
+        showConfirmButton: false,
+        timer: 3000,
+      }).then(() => {
+        this.$router.push("/tes-psikologi");
+      });
+    },
   },
 };
 </script>
