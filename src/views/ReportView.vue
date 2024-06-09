@@ -65,75 +65,21 @@
         <div class="col-12 col-md-8">
           <h4>Kepribadian</h4>
           <div class="row">
-            <div class="col-12 col-md-6 mt-2">
-              <div class="card">
-                <div class="card-header">Openness to Experience: Rendah</div>
-                <div class="card-body">
-                  <p>
-                    Openness to Experience adalah keinginan seseorang untuk
-                    mencoba hal-hal baru, berbeda, dan menarik. Orang yang
-                    memiliki skor rendah pada dimensi ini cenderung lebih
-                    konservatif dan tradisional.
-                  </p>
+            <template v-for="(value, key) in personalityResults">
+              <div class="col-12 col-md-6 mt-2" :key="key">
+                <div class="card">
+                  <div class="card-header">
+                    {{ key }}:
+                    <span :class="getBadgeClass(value)">{{
+                      getLabel(value)
+                    }}</span>
+                  </div>
+                  <div class="card-body">
+                    <p>{{ descriptions[key] }}</p>
+                  </div>
                 </div>
               </div>
-            </div>
-
-            <div class="col-12 col-md-6 mt-2">
-              <div class="card">
-                <div class="card-header">Conscientiousness: Tinggi</div>
-                <div class="card-body">
-                  <p>
-                    Conscientiousness adalah keinginan seseorang untuk mencapai
-                    tujuan dan bekerja keras. Orang yang memiliki skor tinggi
-                    pada dimensi ini cenderung lebih disiplin dan bertanggung
-                    jawab.
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            <div class="col-12 col-md-6 mt-2">
-              <div class="card">
-                <div class="card-header">Extraversion: Tinggi</div>
-                <div class="card-body">
-                  <p>
-                    Extraversion adalah keinginan seseorang untuk berinteraksi
-                    dengan orang lain dan menjadi pusat perhatian. Orang yang
-                    memiliki skor tinggi pada dimensi ini cenderung lebih
-                    bersemangat dan berani.
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            <div class="col-12 col-md-6 mt-2">
-              <div class="card">
-                <div class="card-header">Agreeableness: Sangat Tinggi</div>
-                <div class="card-body">
-                  <p>
-                    Agreeableness adalah keinginan seseorang untuk membantu
-                    orang lain dan bersikap baik. Orang yang memiliki skor
-                    tinggi pada dimensi ini cenderung lebih ramah dan
-                    kooperatif.
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            <div class="col-12 col-md-6 mt-2">
-              <div class="card">
-                <div class="card-header">Neuroticism: Tinggi</div>
-                <div class="card-body">
-                  <p>
-                    Neuroticism adalah kecenderungan seseorang untuk merasa
-                    cemas, gelisah, dan mudah terganggu. Orang yang memiliki
-                    skor tinggi pada dimensi ini cenderung lebih emosional dan
-                    tidak stabil.
-                  </p>
-                </div>
-              </div>
-            </div>
+            </template>
           </div>
         </div>
 
@@ -148,85 +94,21 @@
         <div class="col-12 col-md-8">
           <h4>Minat</h4>
           <div class="row">
-            <div class="col-12 col-md-6 mt-2">
-              <div class="card">
-                <div class="card-header">Realistic: Tinggi</div>
-                <div class="card-body">
-                  <p>
-                    Realistic adalah minat seseorang terhadap aktivitas fisik
-                    dan praktis. Orang yang memiliki minat tinggi pada tipe ini
-                    cenderung lebih suka bekerja dengan tangan dan alat.
-                  </p>
+            <template v-for="(value, key) in interestResults">
+              <div class="col-12 col-md-6 mt-2" :key="key">
+                <div class="card">
+                  <div class="card-header">
+                    {{ key }}:
+                    <span :class="getBadgeClass(value)">{{
+                      getLabel(value)
+                    }}</span>
+                  </div>
+                  <div class="card-body">
+                    <p>{{ descriptions[key] }}</p>
+                  </div>
                 </div>
               </div>
-            </div>
-
-            <div class="col-12 col-md-6 mt-2">
-              <div class="card">
-                <div class="card-header">Investigative: Rendah</div>
-                <div class="card-body">
-                  <p>
-                    Investigative adalah minat seseorang terhadap penelitian dan
-                    analisis. Orang yang memiliki minat rendah pada tipe ini
-                    cenderung lebih suka bekerja dengan fakta dan data.
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            <div class="col-12 col-md-6 mt-2">
-              <div class="card">
-                <div class="card-header">Artistic: Tinggi</div>
-                <div class="card-body">
-                  <p>
-                    Artistic adalah minat seseorang terhadap kreativitas dan
-                    ekspresi diri. Orang yang memiliki minat tinggi pada tipe
-                    ini cenderung lebih suka bekerja dengan ide dan imajinasi.
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            <div class="col-12 col-md-6 mt-2">
-              <div class="card">
-                <div class="card-header">Social: Tinggi</div>
-                <div class="card-body">
-                  <p>
-                    Social adalah minat seseorang terhadap interaksi sosial dan
-                    pelayanan. Orang yang memiliki minat tinggi pada tipe ini
-                    cenderung lebih suka bekerja dengan orang lain dan membantu
-                    mereka.
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            <div class="col-12 col-md-6 mt-2">
-              <div class="card">
-                <div class="card-header">Enterprising: Rendah</div>
-                <div class="card-body">
-                  <p>
-                    Enterprising adalah minat seseorang terhadap kepemimpinan
-                    dan pengaruh. Orang yang memiliki minat rendah pada tipe ini
-                    cenderung lebih suka bekerja dengan orang lain dan membantu
-                    mereka.
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            <div class="col-12 col-md-6 mt-2">
-              <div class="card">
-                <div class="card-header">Conventional: Tinggi</div>
-                <div class="card-body">
-                  <p>
-                    Conventional adalah minat seseorang terhadap rutinitas dan
-                    keteraturan. Orang yang memiliki minat tinggi pada tipe ini
-                    cenderung lebih suka bekerja dengan aturan dan prosedur.
-                  </p>
-                </div>
-              </div>
-            </div>
+            </template>
           </div>
         </div>
 
@@ -245,87 +127,21 @@
         <div class="col-12 col-md-8">
           <h4>Bakat</h4>
           <div class="row">
-            <div class="col-12 col-md-6 mt-2">
-              <div class="card">
-                <div class="card-header">Memori: Tinggi</div>
-                <div class="card-body">
-                  <p>
-                    Memori adalah kemampuan seseorang untuk mengingat informasi
-                    dan peristiwa. Orang yang memiliki bakat tinggi pada tipe
-                    ini cenderung lebih mudah mengingat hal-hal yang telah
-                    dipelajari.
-                  </p>
+            <template v-for="(value, key) in talentResults">
+              <div class="col-12 col-md-6 mt-2" :key="key">
+                <div class="card">
+                  <div class="card-header">
+                    {{ key }}:
+                    <span :class="getBadgeClass(value)">{{
+                      getLabel(value)
+                    }}</span>
+                  </div>
+                  <div class="card-body">
+                    <p>{{ descriptions[key] }}</p>
+                  </div>
                 </div>
               </div>
-            </div>
-
-            <div class="col-12 col-md-6 mt-2">
-              <div class="card">
-                <div class="card-header">Math Achivement: Rendah</div>
-                <div class="card-body">
-                  <p>
-                    Math Achivement adalah kemampuan seseorang dalam matematika
-                    dan logika. Orang yang memiliki bakat rendah pada tipe ini
-                    cenderung lebih sulit dalam memahami konsep matematika.
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            <div class="col-12 col-md-6 mt-2">
-              <div class="card">
-                <div class="card-header">Induction: Rendah</div>
-                <div class="card-body">
-                  <p>
-                    Induction adalah kemampuan seseorang dalam menarik
-                    kesimpulan dari informasi yang diberikan. Orang yang
-                    memiliki bakat rendah pada tipe ini cenderung lebih sulit
-                    dalam menganalisis dan menyimpulkan informasi.
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            <div class="col-12 col-md-6 mt-2">
-              <div class="card">
-                <div class="card-header">Quantitative Reasoning: Tinggi</div>
-                <div class="card-body">
-                  <p>
-                    Quantitative Reasoning adalah kemampuan seseorang dalam
-                    memahami dan menyelesaikan masalah matematika. Orang yang
-                    memiliki bakat tinggi pada tipe ini cenderung lebih cepat
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            <div class="col-12 col-md-6 mt-2">
-              <div class="card">
-                <div class="card-header">Visualization: Rendah</div>
-                <div class="card-body">
-                  <p>
-                    Visualization adalah kemampuan seseorang dalam membayangkan
-                    dan memvisualisasikan objek dan ruang. Orang yang memiliki
-                    bakat rendah pada tipe ini cenderung lebih sulit dalam
-                    memahami konsep visual dan spasial.
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            <div class="col-12 col-md-6 mt-2">
-              <div class="card">
-                <div class="card-header">Reading: Rendah</div>
-                <div class="card-body">
-                  <p>
-                    Reading adalah kemampuan seseorang dalam memahami dan
-                    menafsirkan teks tertulis. Orang yang memiliki bakat rendah
-                    pada tipe ini cenderung lebih sulit dalam memahami dan
-                    menganalisis teks.
-                  </p>
-                </div>
-              </div>
-            </div>
+            </template>
           </div>
         </div>
       </div>
@@ -352,6 +168,65 @@ export default {
       allTestsDisabled: false,
       student_name: "",
       results_per_classification: {},
+      personalityResults: {
+        "Openness to Experience": "",
+        Conscientiousness: "",
+        Extraversion: "",
+        Agreeableness: "",
+        Neuroticism: "",
+      },
+      interestResults: {
+        Realistic: "",
+        Investigative: "",
+        Artistic: "",
+        Social: "",
+        Enterprising: "",
+        Conventional: "",
+      },
+      talentResults: {
+        Memori: "",
+        "Math Achievement": "",
+        Induction: "",
+        "Quantitative Reasoning": "",
+        Visualization: "",
+        Reading: "",
+      },
+      descriptions: {
+        "Openness to Experience":
+          "Openness to Experience adalah keinginan seseorang untuk mencoba hal-hal baru, berbeda, dan menarik. Orang yang memiliki skor rendah pada dimensi ini cenderung lebih konservatif dan tradisional.",
+        Conscientiousness:
+          "Conscientiousness adalah keinginan seseorang untuk mencapai tujuan dan bekerja keras. Orang yang memiliki skor tinggi pada dimensi ini cenderung lebih disiplin dan bertanggung jawab.",
+        Extraversion:
+          "Extraversion adalah keinginan seseorang untuk berinteraksi dengan orang lain dan menjadi pusat perhatian. Orang yang memiliki skor tinggi pada dimensi ini cenderung lebih bersemangat dan berani.",
+        Agreeableness:
+          "Agreeableness adalah keinginan seseorang untuk membantu orang lain dan bersikap baik. Orang yang memiliki skor tinggi pada dimensi ini cenderung lebih ramah dan kooperatif.",
+        Neuroticism:
+          "Neuroticism adalah kecenderungan seseorang untuk merasa cemas, gelisah, dan mudah terganggu. Orang yang memiliki skor tinggi pada dimensi ini cenderung lebih emosional dan tidak stabil.",
+        Realistic:
+          "Realistic adalah minat seseorang terhadap aktivitas fisik dan praktis. Orang yang memiliki minat tinggi pada tipe ini cenderung lebih suka bekerja dengan tangan dan alat.",
+        Investigative:
+          "Investigative adalah minat seseorang terhadap penelitian dan analisis. Orang yang memiliki minat rendah pada tipe ini cenderung lebih suka bekerja dengan fakta dan data.",
+        Artistic:
+          "Artistic adalah minat seseorang terhadap kreativitas dan ekspresi diri. Orang yang memiliki minat tinggi pada tipe ini cenderung lebih suka bekerja dengan ide dan imajinasi.",
+        Social:
+          "Social adalah minat seseorang terhadap interaksi sosial dan pelayanan. Orang yang memiliki minat tinggi pada tipe ini cenderung lebih suka bekerja dengan orang lain dan membantu mereka.",
+        Enterprising:
+          "Enterprising adalah minat seseorang terhadap kepemimpinan dan pengaruh. Orang yang memiliki minat rendah pada tipe ini cenderung lebih suka bekerja dengan orang lain dan membantu mereka.",
+        Conventional:
+          "Conventional adalah minat seseorang terhadap rutinitas dan keteraturan. Orang yang memiliki minat tinggi pada tipe ini cenderung lebih suka bekerja dengan aturan dan prosedur.",
+        Memori:
+          "Memori adalah kemampuan seseorang untuk mengingat informasi dan peristiwa. Orang yang memiliki bakat tinggi pada tipe ini cenderung lebih mudah mengingat hal-hal yang telah dipelajari.",
+        "Math Achievement":
+          "Math Achievement adalah kemampuan seseorang dalam matematika dan logika. Orang yang memiliki bakat rendah pada tipe ini cenderung lebih sulit dalam memahami konsep matematika.",
+        Induction:
+          "Induction adalah kemampuan seseorang dalam menarik kesimpulan dari informasi yang diberikan. Orang yang memiliki bakat rendah pada tipe ini cenderung lebih sulit dalam menganalisis dan menyimpulkan informasi.",
+        "Quantitative Reasoning":
+          "Quantitative Reasoning adalah kemampuan seseorang dalam memahami dan menyelesaikan masalah matematika. Orang yang memiliki bakat tinggi pada tipe ini cenderung lebih cepat",
+        Visualization:
+          "Visualization adalah kemampuan seseorang dalam membayangkan dan memvisualisasikan objek dan ruang. Orang yang memiliki bakat rendah pada tipe ini cenderung lebih sulit dalam memahami konsep visual dan spasial.",
+        Reading:
+          "Reading adalah kemampuan seseorang dalam memahami dan menafsirkan teks tertulis. Orang yang memiliki bakat rendah pada tipe ini cenderung lebih sulit dalam memahami dan menganalisis teks.",
+      },
     };
   },
   async mounted() {
@@ -383,6 +258,28 @@ export default {
         } else {
           this.results_per_classification =
             response.data.results_per_classification;
+
+          this.personalityResults["Openness to Experience"] =
+            response.data.hasil_tes.o;
+          this.personalityResults["Conscientiousness"] =
+            response.data.hasil_tes.ce;
+          this.personalityResults["Extraversion"] = response.data.hasil_tes.ea;
+          this.personalityResults["Agreeableness"] = response.data.hasil_tes.an;
+          this.personalityResults["Neuroticism"] = response.data.hasil_tes.n;
+          this.interestResults["Realistic"] = response.data.hasil_tes.r;
+          this.interestResults["Investigative"] = response.data.hasil_tes.i;
+          this.interestResults["Artistic"] = response.data.hasil_tes.a;
+          this.interestResults["Social"] = response.data.hasil_tes.s;
+          this.interestResults["Enterprising"] = response.data.hasil_tes.e;
+          this.interestResults["Conventional"] = response.data.hasil_tes.c;
+          this.talentResults["Math Achievement"] = response.data.hasil_tes.math;
+          this.talentResults["Visualization"] = response.data.hasil_tes.visual;
+          this.talentResults["Memori"] = response.data.hasil_tes.memory;
+          this.talentResults["Reading"] = response.data.hasil_tes.reading;
+          this.talentResults["Induction"] = response.data.hasil_tes.induction;
+          this.talentResults["Quantitative Reasoning"] =
+            response.data.hasil_tes.quantitative_reasoning;
+
           this.allTestsDisabled = true;
         }
       } catch (error) {
@@ -400,6 +297,18 @@ export default {
       }).then(() => {
         this.$router.push("/tes-psikologi");
       });
+    },
+    getBadgeClass(value) {
+      if (value === "Rendah") return "badge text-bg-danger";
+      if (value === "Tinggi") return "badge text-bg-warning";
+      if (value === "Sangat Tinggi") return "badge text-bg-success";
+      return "badge text-bg-secondary";
+    },
+    getLabel(value) {
+      if (value === "Rendah") return "Rendah";
+      if (value === "Tinggi") return "Tinggi";
+      if (value === "Sangat Tinggi") return "Sangat Tinggi";
+      return "Cukup";
     },
   },
 };
