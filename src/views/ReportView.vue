@@ -12,109 +12,33 @@
             width="20%"
           />
           <h3 class="text-center">Rekomendasi Jurusan</h3>
-          <h3 class="text-center">Aqil Rahman</h3>
+          <h3 class="text-center">{{ student_name }}</h3>
 
-          <div class="row">
-            <div class="col-12 mt-3"><b>S1-Saintek</b></div>
-            <div class="col-12 col-md-6 mt-3">
-              <div class="progress">
-                <div
-                  class="progress-bar bg-warning text-dark"
-                  role="progressbar"
-                  style="width: 75%"
-                  aria-valuenow="75"
-                  aria-valuemin="0"
-                  aria-valuemax="100"
-                >
-                  Teknik Informatika 75% Cocok
-                </div>
-              </div>
+          <div
+            v-for="(majors, classification) in results_per_classification"
+            :key="classification"
+            class="mt-4"
+          >
+            <div class="col-12 mt-3">
+              <b>{{ classification.toUpperCase() }}</b>
             </div>
-            <div class="col-12 col-md-6 mt-3">
-              <div class="progress">
-                <div
-                  class="progress-bar bg-warning text-dark"
-                  role="progressbar"
-                  style="width: 78%"
-                  aria-valuenow="78"
-                  aria-valuemin="0"
-                  aria-valuemax="100"
-                >
-                  Teknik Sipil 78% Cocok
-                </div>
-              </div>
-            </div>
-            <div class="col-12 col-md-6 mt-3">
-              <div class="progress">
-                <div
-                  class="progress-bar bg-warning text-dark"
-                  role="progressbar"
-                  style="width: 85%"
-                  aria-valuenow="85"
-                  aria-valuemin="0"
-                  aria-valuemax="100"
-                >
-                  Teknik Kimia 85% Cocok
-                </div>
-              </div>
-            </div>
-
-            <div class="col-12 mt-3"><b>S1-Soshum</b></div>
-            <div class="col-12 col-md-6 mt-3">
-              <div class="progress">
-                <div
-                  class="progress-bar bg-warning text-dark"
-                  role="progressbar"
-                  style="width: 90%"
-                  aria-valuenow="90"
-                  aria-valuemin="0"
-                  aria-valuemax="100"
-                >
-                  Hubungan Internasional 90% Cocok
-                </div>
-              </div>
-            </div>
-            <div class="col-12 col-md-6 mt-3">
-              <div class="progress">
-                <div
-                  class="progress-bar bg-warning text-dark"
-                  role="progressbar"
-                  style="width: 85%"
-                  aria-valuenow="85"
-                  aria-valuemin="0"
-                  aria-valuemax="100"
-                >
-                  Ilmu Hukum 85% Cocok
-                </div>
-              </div>
-            </div>
-
-            <div class="col-12 mt-3"><b>Keagamaan</b></div>
-            <div class="col-12 col-md-6 mt-3">
-              <div class="progress">
-                <div
-                  class="progress-bar bg-warning text-dark"
-                  role="progressbar"
-                  style="width: 87%"
-                  aria-valuenow="87"
-                  aria-valuemin="0"
-                  aria-valuemax="100"
-                >
-                  Ilmu Tajwid 87% Cocok
-                </div>
-              </div>
-            </div>
-            <div class="col-12 col-md-6 mt-3">
-              <div class="progress">
-                <div
-                  class="progress-bar bg-warning text-dark"
-                  role="progressbar"
-                  style="width: 80%"
-                  aria-valuenow="80"
-                  aria-valuemin="0"
-                  aria-valuemax="100"
-                >
-                  Fiqih 80% Cocok
+            <div class="row">
+              <div
+                v-for="major in majors"
+                :key="major.major_id"
+                class="col-12 col-md-6 mt-3"
+              >
+                <div class="progress">
+                  <div
+                    class="progress-bar bg-warning text-dark"
+                    role="progressbar"
+                    :style="{ width: major.percentage + '%' }"
+                    :aria-valuenow="major.percentage"
+                    aria-valuemin="0"
+                    aria-valuemax="100"
+                  >
+                    {{ major.major }} {{ major.percentage.toFixed(2) }}% Cocok
+                  </div>
                 </div>
               </div>
             </div>
@@ -427,33 +351,14 @@ export default {
     return {
       allTestsDisabled: false,
       student_name: "",
-      province: "",
-      city: "",
-      gender: "",
-      contact: "",
-      birth_date: "",
-      address: "",
+      results_per_classification: {},
     };
   },
   async mounted() {
     const user = JSON.parse(localStorage.getItem("user"));
     this.student_name = user.student_name;
-    this.province = user.province;
-    this.city = user.city;
-    this.gender = user.gender;
-    this.contact = user.contact;
-    this.birth_date = user.birth_date;
-    this.address = user.address;
 
-    if (
-      this.student_name == null ||
-      this.province == null ||
-      this.city == null ||
-      this.gender == null ||
-      this.contact == null ||
-      this.birth_date == null ||
-      this.address == null
-    ) {
+    if (!this.student_name) {
       this.$router.push("/profile");
       return;
     }
@@ -476,12 +381,13 @@ export default {
         ) {
           this.redirectToSubTesPsikologi();
         } else {
-          // Assume that if the API returns any other message, all tests are enabled
+          this.results_per_classification =
+            response.data.results_per_classification;
           this.allTestsDisabled = true;
         }
       } catch (error) {
         console.error("Error checking test data:", error);
-        this.redirectToSubTesPsikologi(); // Assume failure to get a proper response also requires a redirect
+        this.redirectToSubTesPsikologi();
       }
     },
     redirectToSubTesPsikologi() {
