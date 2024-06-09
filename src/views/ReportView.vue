@@ -412,7 +412,6 @@
 </template>
 
 <script>
-// @ is an alias to /src
 import NavBar from "@/components/NavBar.vue";
 import FooterCom from "@/components/FooterCom.vue";
 import axios from "axios";
@@ -462,70 +461,34 @@ export default {
     await this.checkAllTestsDisabled(user.id);
   },
   methods: {
-    async checkAllTestsDisabled(userId) {
+    async checkAllTestsDisabled(studentId) {
       try {
         const response = await axios.get(
-          `https://api.abcompany.my.id/api/test/${userId}`
-        );
-        const data = response.data;
-        if (data.least_time === null) {
-          this.redirectToSubTesPsikologi();
-          return;
-        }
-
-        const now = new Date();
-        let allDisabled = true;
-
-        const testItems = [
-          "ocean",
-          "riasec",
-          "visual",
-          "induction",
-          "quatitative_reasoning",
-          "math",
-          "reading",
-          "memory",
-        ];
-
-        for (const key of testItems) {
-          const answerTime = data.time_first_answers[key];
-          if (answerTime) {
-            let createdAt = new Date(answerTime.created_at);
-
-            if (key === "ocean" || key === "riasec") {
-              createdAt = new Date(
-                createdAt.getTime() + 7 * 60 * 60 * 1000 + 10 * 60 * 1000
-              );
-            } else {
-              createdAt = new Date(
-                createdAt.getTime() + 7 * 60 * 60 * 1000 + 6 * 60 * 1000
-              );
-            }
-
-            if (now <= createdAt) {
-              allDisabled = false;
-              break;
-            }
-          } else {
-            allDisabled = false;
-            break;
+          `https://api.abcompany.my.id/api/report/${studentId}`,
+          {
+            headers: {
+              "api-key": "qwe123qwe#",
+            },
           }
-        }
-
-        if (!allDisabled) {
+        );
+        if (
+          response.data.message === "Anda belum mengerjakan/mengenerate Tes!"
+        ) {
           this.redirectToSubTesPsikologi();
         } else {
+          // Assume that if the API returns any other message, all tests are enabled
           this.allTestsDisabled = true;
         }
       } catch (error) {
         console.error("Error checking test data:", error);
+        this.redirectToSubTesPsikologi(); // Assume failure to get a proper response also requires a redirect
       }
     },
     redirectToSubTesPsikologi() {
       Swal.fire({
         icon: "warning",
         title: "Peringatan",
-        text: "Harap selesaikan semua tes terlebih dahulu",
+        text: "Harap selesaikan semua tes terlebih dahulu, dan lakukan generate report.",
         showConfirmButton: false,
         timer: 3000,
       }).then(() => {

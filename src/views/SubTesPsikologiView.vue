@@ -25,8 +25,15 @@
       </h5>
 
       <div v-if="allTestsDisabled" class="text-center mt-5">
-        <button class="btn btn-primary mb-5" @click="report()">
-          <i class="fa-regular fa-envelope"></i> Lihat Hasil Tes
+        <button
+          class="btn btn-primary mb-5"
+          @click="checkSummaryBeforeReport()"
+          :disabled="isGenerateReport"
+        >
+          <span v-if="!isGenerateReport"
+            ><i class="fa-regular fa-envelope"></i> Lihat Hasil Tes</span
+          >
+          <span v-if="isGenerateReport"> Loading Generate Report...</span>
         </button>
       </div>
       <p v-else class="text-center mt-5">Lakukan Semua Tes dibawah ini!</p>
@@ -129,6 +136,7 @@ export default {
           disabled: false,
         },
       ],
+      isGenerateReport: false,
     };
   },
   computed: {
@@ -176,9 +184,83 @@ export default {
     this.fetchTestData();
   },
   methods: {
-    report() {
+    async checkSummaryBeforeReport() {
+      if (!this.allTestsDisabled) {
+        Swal.fire({
+          icon: "warning",
+          title: "Harap selesaikan semua tes terlebih dahulu",
+          showConfirmButton: true,
+        });
+        return;
+      }
+
+      const user = JSON.parse(localStorage.getItem("user"));
+      const student_id = user.id;
+
+      try {
+        const response = await axios.get(
+          `https://api.abcompany.my.id/api/checkSummary/${student_id}`,
+          {
+            headers: {
+              "api-key": "qwe123qwe#",
+            },
+          }
+        );
+        const data = response.data;
+
+        if (data.message != "Anda belum mengerjakan/mengenerate Tes!") {
+          this.$router.push("/report");
+        } else {
+          this.report();
+        }
+      } catch (error) {
+        console.error("Error checking summary:", error);
+        Swal.fire({
+          icon: "error",
+          title: "Network Error",
+          text: "Tidak dapat terhubung ke server.",
+        });
+      }
+    },
+
+    async report() {
       if (this.allTestsDisabled) {
-        this.$router.push("/report");
+        const user = JSON.parse(localStorage.getItem("user"));
+        const student_id = user.id;
+        const school_id = user.school_id || 0;
+
+        this.isGenerateReport = true;
+        try {
+          const response = await axios.get(
+            `https://api.abcompany.my.id/api/generate/${student_id}/${school_id}`,
+            {
+              headers: {
+                "api-key": "qwe123qwe#",
+              },
+            }
+          );
+
+          if (
+            response.data.message === "Generate Report Berhasil" ||
+            response.data.message === "Data sudah ada"
+          ) {
+            this.$router.push("/report");
+          } else {
+            Swal.fire({
+              icon: "error",
+              title: "Gagal mengenerate report",
+              showConfirmButton: true,
+            });
+          }
+        } catch (error) {
+          console.error("Error during report generation:", error);
+          Swal.fire({
+            icon: "error",
+            title: "Network Error",
+            text: "Tidak dapat terhubung ke server.",
+          });
+        }
+        this.isGenerateReport = false;
       } else {
         Swal.fire({
           icon: "warning",
