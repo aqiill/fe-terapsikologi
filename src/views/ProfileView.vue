@@ -153,6 +153,7 @@
                   class="form-control"
                   id="currentPassword"
                   v-model="passwords.current"
+                  required
                 />
               </div>
               <div class="col-12 mb-3">
@@ -164,6 +165,7 @@
                   class="form-control"
                   id="newPassword"
                   v-model="passwords.new"
+                  required
                 />
               </div>
               <div class="col-12 mb-3">
@@ -175,11 +177,17 @@
                   class="form-control"
                   id="confirmPassword"
                   v-model="passwords.confirm"
+                  required
                 />
               </div>
               <div class="col-12">
-                <button type="submit" class="btn btn-secondary">
-                  Ganti Kata Sandi
+                <button
+                  type="submit"
+                  class="btn btn-secondary"
+                  :disabled="isLoading"
+                >
+                  <span v-if="!isLoading">Ganti Kata Sandi</span>
+                  <span v-if="isLoading">Loading</span>
                 </button>
               </div>
             </div>
@@ -319,7 +327,69 @@ export default {
         });
     },
     handlePasswordChange() {
-      console.log("Password Changed:", this.passwords);
+      this.isLoading = true;
+      // Validasi password
+      const passwordPattern =
+        /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/;
+      if (!this.passwords.new.match(passwordPattern)) {
+        Swal.fire({
+          icon: "error",
+          title: "Kata sandi baru tidak memenuhi syarat",
+          text: "Kata sandi harus terdiri dari minimal 8 karakter, termasuk huruf, angka, dan simbol.",
+          showConfirmButton: true,
+        });
+        this.isLoading = false;
+        return;
+      }
+
+      if (this.passwords.new !== this.passwords.confirm) {
+        Swal.fire({
+          icon: "error",
+          title: "Konfirmasi kata sandi tidak cocok",
+          showConfirmButton: true,
+        });
+        this.isLoading = false;
+        return;
+      }
+
+      const email = this.user.email;
+
+      axios
+        .post(
+          "https://api.abcompany.my.id/api/changePassword",
+          {
+            email: email,
+            password: this.passwords.current,
+            new_password: this.passwords.new,
+          },
+          {
+            headers: {
+              "api-key": "qwe123qwe#",
+            },
+          }
+        )
+        .then(() => {
+          Swal.fire({
+            icon: "success",
+            title: "Kata sandi berhasil diubah",
+            showConfirmButton: false,
+            timer: 3000,
+          });
+          this.passwords.current = "";
+          this.passwords.new = "";
+          this.passwords.confirm = "";
+          this.isLoading = false;
+        })
+        .catch((error) => {
+          console.error("Error changing password:", error);
+          Swal.fire({
+            icon: "error",
+            title: "Gagal mengubah kata sandi",
+            showConfirmButton: false,
+            timer: 3000,
+          });
+          this.isLoading = false;
+        });
     },
   },
   mounted() {
