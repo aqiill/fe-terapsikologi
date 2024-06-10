@@ -30,7 +30,7 @@
               >
                 <div class="progress">
                   <div
-                    class="progress-bar bg-warning text-dark"
+                    :class="getProgressBarClass(major.percentage)"
                     role="progressbar"
                     :style="{ width: major.percentage + '%' }"
                     :aria-valuenow="major.percentage"
@@ -309,6 +309,10 @@ export default {
       if (value === "Tinggi") return "Tinggi";
       if (value === "Sangat Tinggi") return "Sangat Tinggi";
       return "Cukup";
+    },
+    getProgressBarClass(percentage) {
+      if (percentage >= 80) return "progress-bar bg-success text-light";
+      return "progress-bar bg-warning text-dark";
     },
   },
 };
