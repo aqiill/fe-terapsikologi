@@ -2,7 +2,7 @@
   <div class="home" v-if="allTestsDisabled">
     <NavBar />
 
-    <div class="container mt-5">
+    <div class="container mt-5" id="report-content">
       <div class="row">
         <div class="col-12">
           <img
@@ -147,6 +147,17 @@
       </div>
     </div>
 
+    <div class="container">
+      <button
+        @click="downloadPDF"
+        class="btn btn-primary mt-3"
+        :disabled="isLoading"
+      >
+        <span v-if="!isLoading">Download PDF</span>
+        <span v-if="isLoading">Loading...</span>
+      </button>
+    </div>
+
     <FooterCom />
   </div>
 </template>
@@ -156,6 +167,8 @@ import NavBar from "@/components/NavBar.vue";
 import FooterCom from "@/components/FooterCom.vue";
 import axios from "axios";
 import Swal from "sweetalert2";
+import jsPDF from "jspdf";
+import html2canvas from "html2canvas";
 
 export default {
   name: "ReportView",
@@ -165,6 +178,7 @@ export default {
   },
   data() {
     return {
+      isLoading: false,
       allTestsDisabled: false,
       student_name: "",
       results_per_classification: {},
@@ -299,20 +313,50 @@ export default {
       });
     },
     getBadgeClass(value) {
-      if (value === "Rendah") return "badge text-bg-danger";
+      if (value === "Rendah" || value === "Sangat Rendah")
+        return "badge text-bg-danger";
       if (value === "Tinggi") return "badge text-bg-warning";
       if (value === "Sangat Tinggi") return "badge text-bg-success";
       return "badge text-bg-secondary";
     },
     getLabel(value) {
+      if (value === "Sangat Rendah") return "Sangat Rendah";
       if (value === "Rendah") return "Rendah";
+      if (value === "Cukup") return "Cukup";
       if (value === "Tinggi") return "Tinggi";
       if (value === "Sangat Tinggi") return "Sangat Tinggi";
-      return "Cukup";
     },
     getProgressBarClass(percentage) {
       if (percentage >= 80) return "progress-bar bg-success text-light";
       return "progress-bar bg-warning text-dark";
+    },
+    async downloadPDF() {
+      this.isLoading = true;
+      const reportContent = document.getElementById("report-content");
+      const canvas = await html2canvas(reportContent, { scale: 2 });
+      const imgData = canvas.toDataURL("image/png");
+
+      const pdf = new jsPDF("p", "mm", "a4");
+      const pdfWidth = pdf.internal.pageSize.getWidth() - 20; // lebar halaman PDF dikurangi margin
+      const pdfHeight = pdf.internal.pageSize.getHeight() - 20; // tinggi halaman PDF dikurangi margin
+
+      let imgProps = pdf.getImageProperties(imgData);
+      let imgHeight = (imgProps.height * pdfWidth) / imgProps.width;
+      let heightLeft = imgHeight;
+      let position = 10; // posisi awal y dengan margin
+
+      pdf.addImage(imgData, "PNG", 10, position, pdfWidth, imgHeight);
+      heightLeft -= pdfHeight;
+
+      while (heightLeft >= 0) {
+        position = heightLeft - imgHeight + 20;
+        pdf.addPage();
+        pdf.addImage(imgData, "PNG", 10, position, pdfWidth, imgHeight);
+        heightLeft -= pdfHeight;
+      }
+
+      pdf.save("report.pdf");
+      this.isLoading = false;
     },
   },
 };
