@@ -71,6 +71,7 @@
                 :id="'choice' + choice.value"
                 :value="choice.value"
                 v-model="selectedAnswer"
+                @change="updateSelectedAnswer"
               />
               <label class="form-check-label" :for="'choice' + choice.value">
                 <div v-if="choice.image">
@@ -144,13 +145,14 @@ export default {
         window.innerWidth > 768 || window.innerHeight < window.innerWidth,
       timeUpRedirected: false,
       isLoading: false,
+      answers: [], // Array to store selected answers
     };
   },
   async mounted() {
     this.startTimer();
     window.addEventListener("resize", this.handleResize);
-    this.loadQuestionFromRoute();
     await this.loadQuestions();
+    this.loadQuestionFromRoute();
   },
   beforeDestroy() {
     window.removeEventListener("resize", this.handleResize);
@@ -346,11 +348,16 @@ export default {
           first_id: questionData.first_id,
         };
 
-        if (questionData.student_answer !== null) {
-          this.selectedAnswer = questionData.student_answer;
-        } else {
-          this.selectedAnswer = null;
-        }
+        this.$nextTick(() => {
+          if (this.answers[this.currentQuestion.question_id]) {
+            this.selectedAnswer =
+              this.answers[this.currentQuestion.question_id];
+          } else if (questionData.student_answer !== null) {
+            this.selectedAnswer = questionData.student_answer;
+          } else {
+            this.selectedAnswer = null;
+          }
+        });
 
         if (questionData.first_answers == null) {
           const now = new Date();
@@ -428,6 +435,13 @@ export default {
           text: "Gagal mengirim jawaban. Silakan coba lagi.",
         });
       }
+    },
+    updateSelectedAnswer() {
+      this.$set(
+        this.answers,
+        this.currentQuestion.question_id,
+        this.selectedAnswer
+      );
     },
     async handleNextQuestion() {
       this.isLoading = true;
