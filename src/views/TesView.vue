@@ -10,7 +10,7 @@
             class="rounded-circle"
             height="50"
           />
-          <h6>Aqil Rahman</h6>
+          <h6>{{ student_name }}</h6>
           <span class="badge bg-success"
             >Sisa Waktu {{ minutes }}:{{ seconds }}</span
           >
@@ -139,6 +139,7 @@ export default {
         last_id: null,
         first_id: null,
       },
+      student_name: "",
       selectedAnswer: null,
       totalQuestions: [],
       minutes: 10,
@@ -152,6 +153,7 @@ export default {
   },
   async mounted() {
     this.startTimer();
+    this.student_name = JSON.parse(localStorage.getItem("user")).student_name;
     window.addEventListener("resize", this.handleResize);
     await this.loadQuestions();
     this.loadQuestionFromRoute();
@@ -488,7 +490,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 body {
   background-color: #f8f9fa;
 }

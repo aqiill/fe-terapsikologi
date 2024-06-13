@@ -10,7 +10,7 @@
             class="rounded-circle"
             height="50"
           />
-          <h6>Aqil Rahman 2</h6>
+          <h6>{{ student_name }}</h6>
           <span class="badge bg-success"
             >Sisa Waktu {{ minutes }}:{{ seconds }}</span
           >
@@ -77,19 +77,36 @@
             <div
               v-for="choice in answerOptions"
               :key="choice.value"
-              class="form-check m-2"
+              :class="{
+                'form-check m-2': !choice.image,
+                'image-choice d-inline-block m-2': choice.image,
+              }"
             >
               <input
-                class="form-check-input"
+                v-show="!choice.image"
+                class="form-check-input styled-radio"
                 type="radio"
                 :name="'question' + currentQuestion.number"
                 :id="'choice' + choice.value"
                 :value="choice.value"
                 v-model="selectedOption"
               />
-              <label class="form-check-label" :for="'choice' + choice.value">
-                <div v-if="choice.image">
-                  <img :src="choice.image" alt="Choice Image" height="150" />
+              <label
+                :class="{
+                  'form-check-label': !choice.image,
+                  'image-label': choice.image,
+                }"
+                :for="'choice' + choice.value"
+              >
+                <div
+                  v-if="choice.image"
+                  :class="{ 'selected-image': selectedOption === choice.value }"
+                >
+                  <img
+                    :src="choice.image"
+                    alt="Choice Image"
+                    class="img-fluid"
+                  />
                 </div>
                 <div v-else>
                   {{ choice.text }}
@@ -97,6 +114,7 @@
               </label>
             </div>
           </div>
+
           <div class="d-flex justify-content-between mt-3">
             <button class="btn btn-secondary" @click="prevQuestion">
               <i class="fa-solid fa-arrow-left"></i> Kembali
@@ -148,6 +166,7 @@ export default {
         question_image: null,
         student_answer: null,
       },
+      student_name: "",
       selectedAnswer: null,
       selectedOption: null,
       totalQuestions: [],
@@ -182,6 +201,7 @@ export default {
   },
   async mounted() {
     this.startTimer();
+    this.student_name = JSON.parse(localStorage.getItem("user")).student_name;
     window.addEventListener("resize", this.handleResize);
     await this.loadQuestions();
   },
@@ -444,7 +464,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 body {
   background-color: #f8f9fa;
 }
@@ -493,4 +513,48 @@ body {
     display: none;
   }
 } */
+
+.styled-radio {
+  width: 20px; /* Increase the size of the radio button */
+  height: 20px;
+  accent-color: blue; /* Customize the color to suit your design */
+  border: 2px solid blue;
+}
+
+.selected-image {
+  border: 3px solid green; /* Highlight selected images */
+  padding: 3px;
+  border-radius: 5px;
+}
+
+img.img-fluid {
+  cursor: pointer;
+  height: 100px; /* Set a fixed height for consistency */
+  width: auto;
+  margin-top: 5px;
+}
+
+.form-check {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.image-choice {
+  display: inline-block; /* Horizontal layout for images */
+  margin-right: 10px; /* Space between image choices */
+}
+
+.image-label {
+  display: block;
+  text-align: center;
+  margin-top: 5px;
+}
+
+@media (max-width: 768px) {
+  .form-check {
+    flex-direction: column;
+  }
+}
 </style>
