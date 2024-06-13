@@ -519,6 +519,7 @@ body {
   height: 20px;
   accent-color: blue; /* Customize the color to suit your design */
   border: 2px solid blue;
+  margin-right: 10px;
 }
 
 .selected-image {
@@ -537,8 +538,10 @@ img.img-fluid {
 .form-check {
   width: 100%;
   display: flex;
-  flex-direction: column;
-  align-items: flex-start;
+  flex-direction: row; /* Changed from column to row */
+  align-items: center; /* Align items vertically in the center */
+  justify-content: flex-start; /* Align content to the left */
+  margin-bottom: 10px; /* Space between each form-check group */
 }
 
 .image-choice {
