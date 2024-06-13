@@ -58,31 +58,33 @@
       <div class="container mt-5">
         <div class="question-box p-4">
           <h4>{{ currentQuestion.number }}. {{ currentQuestion.question }}</h4>
-          <div class="mt-3 d-flex justify-content-center flex-wrap">
-            <div
-              v-for="choice in currentQuestion.choices"
-              :key="choice.value"
-              class="form-check m-2"
-            >
-              <input
-                class="form-check-input"
-                type="radio"
-                :name="'question' + currentQuestion.number"
-                :id="'choice' + choice.value"
-                :value="choice.value"
-                v-model="selectedAnswer"
-                @change="updateSelectedAnswer"
-              />
-              <label class="form-check-label" :for="'choice' + choice.value">
-                <div v-if="choice.image">
-                  <img :src="choice.image" alt="Choice Image" height="150" />
-                </div>
-                <div v-else>
-                  {{ choice.text }}
-                </div>
-              </label>
+          <div class="mt-3 d-flex justify-content-center">
+            <div class="rating-container">
+              <span class="rating-text">Sangat Sesuai</span>
+              <div
+                v-for="choice in currentQuestion.choices"
+                :key="choice.value"
+                class="form-check"
+              >
+                <input
+                  class="d-none form-check-input"
+                  type="radio"
+                  :id="'choice' + choice.value"
+                  :value="choice.value"
+                  :name="'question' + currentQuestion.number"
+                  v-model="selectedAnswer"
+                  @change="updateSelectedAnswer"
+                />
+                <label
+                  class="form-check-label"
+                  :for="'choice' + choice.value"
+                  >{{ choice.value }}</label
+                >
+              </div>
+              <span class="rating-text">Sangat Tidak Sesuai</span>
             </div>
           </div>
+
           <div class="d-flex justify-content-between mt-3">
             <button
               v-if="currentQuestion.number != 1"
@@ -528,5 +530,32 @@ body {
   .question-box {
     margin: 20px;
   }
+}
+
+.rating-container {
+  background: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  display: flex;
+  align-items: center;
+}
+
+.form-check-label {
+  cursor: pointer;
+  background: #e0e0e0;
+  padding: 10px 20px;
+  border-radius: 50%;
+  transition: background 0.3s;
+  margin: 0 10px; /* Adjusted to ensure spacing */
+}
+
+.form-check-input:checked + .form-check-label {
+  background: #007bff;
+  color: #fff;
+}
+
+.rating-text {
+  margin: 0 20px;
 }
 </style>
