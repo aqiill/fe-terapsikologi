@@ -310,7 +310,7 @@ export default {
 
           Swal.fire({
             icon: "success",
-            title: "Profil berhasil diperbaharui",
+            title: "Profil berhasil diperbarui",
             showConfirmButton: false,
             timer: 3000,
           });
