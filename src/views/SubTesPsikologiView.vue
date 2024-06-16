@@ -15,7 +15,7 @@
           class="img-fluid rounded-circle"
         />
       </div>
-      <h3 class="text-center">{{ studentEmail }}</h3>
+      <h3 class="text-center">{{ student_name }}</h3>
 
       <hr />
 
@@ -76,6 +76,7 @@ export default {
   data() {
     return {
       id: "",
+      student_name: "",
       studentEmail: "",
       studentEmailEncrypt: "",
       testItems: [
@@ -145,28 +146,29 @@ export default {
     },
   },
   mounted() {
-    this.student_name = JSON.parse(localStorage.getItem("user")).student_name;
-    this.province = JSON.parse(localStorage.getItem("user")).province;
-    this.city = JSON.parse(localStorage.getItem("user")).city;
-    this.gender = JSON.parse(localStorage.getItem("user")).gender;
-    this.contact = JSON.parse(localStorage.getItem("user")).contact;
-    this.birth_date = JSON.parse(localStorage.getItem("user")).birth_date;
-    this.address = JSON.parse(localStorage.getItem("user")).address;
+    const user = JSON.parse(localStorage.getItem("user"));
+    this.student_name = user.student_name;
+    this.province = user.province;
+    this.city = user.city;
+    this.gender = user.gender;
+    this.contact = user.contact;
+    this.birth_date = user.birth_date;
+    this.address = user.address;
 
     if (
-      this.student_name == null ||
-      this.province == null ||
-      this.city == null ||
-      this.gender == null ||
-      this.contact == null ||
-      this.birth_date == null ||
-      this.address == null
+      !this.student_name ||
+      !this.province ||
+      !this.city ||
+      !this.gender ||
+      !this.contact ||
+      !this.birth_date ||
+      !this.address
     ) {
       this.$router.push("/profile");
     }
 
-    this.id = JSON.parse(localStorage.getItem("user")).id;
-    this.studentEmail = JSON.parse(localStorage.getItem("user")).student_email;
+    this.id = user.id;
+    this.studentEmail = user.student_email;
     this.studentEmailEncrypt = md5(this.studentEmail);
 
     if (

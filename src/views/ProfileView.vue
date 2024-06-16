@@ -7,7 +7,7 @@
 
       <!-- Collapse untuk Profil Pengguna -->
       <button
-        class="btn btn-primary ms-2 mt-3"
+        class="btn btn-primary ms-2 mt-3 purple-button"
         type="button"
         data-bs-toggle="collapse"
         data-bs-target="#profileForm"
@@ -116,7 +116,7 @@
               <div class="col-12">
                 <button
                   type="submit"
-                  class="btn btn-primary float-end"
+                  class="btn btn-primary float-end purple-button"
                   :disabled="isLoading"
                 >
                   <span v-if="isLoading">Loading...</span>
@@ -130,7 +130,7 @@
 
       <!-- Collapse untuk Ganti Kata Sandi -->
       <button
-        class="btn btn-secondary ms-2 mt-3"
+        class="btn btn-secondary ms-2 mt-3 purple-button"
         type="button"
         data-bs-toggle="collapse"
         data-bs-target="#passwordForm"
@@ -183,7 +183,7 @@
               <div class="col-12">
                 <button
                   type="submit"
-                  class="btn btn-secondary"
+                  class="btn btn-secondary purple-button"
                   :disabled="isLoading"
                 >
                   <span v-if="!isLoading">Ganti Kata Sandi</span>
@@ -397,3 +397,31 @@ export default {
   },
 };
 </script>
+
+<style>
+.vh-100 {
+  height: 100vh;
+}
+.logo {
+  max-width: 300px;
+}
+.bg-light {
+  background-color: #f8f9fa;
+}
+.custom-link {
+  color: #8850f0;
+  text-decoration: none;
+}
+.custom-link:hover {
+  text-decoration: underline;
+}
+.purple-button {
+  background-color: #8850f0 !important;
+  border-color: #8850f0 !important;
+  color: white !important;
+}
+.purple-button:hover {
+  background-color: #6237b3 !important;
+  border-color: #6237b3 !important;
+}
+</style>
