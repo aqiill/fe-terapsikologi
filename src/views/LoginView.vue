@@ -100,6 +100,10 @@ export default {
     };
   },
   methods: {
+    isValidPassword(password) {
+      const regex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/;
+      return regex.test(password);
+    },
     async fetchSchools() {
       try {
         const response = await axios.get("/api/schools", {
@@ -115,11 +119,7 @@ export default {
     },
     async handleLogin() {
       if (!this.login.email || !this.login.password) {
-        Swal.fire(
-          "Login Gagal!",
-          "Harap isi semua bidang yang diperlukan.",
-          "warning"
-        );
+        Swal.fire("Login Gagal!", "Harap isi semua bidang yang diperlukan.", "warning");
         return;
       }
       const loginData = {
@@ -145,7 +145,11 @@ export default {
     },
     async handleRegister() {
       this.isLoading = true;
-
+      if (!this.isValidPassword(this.register.password)) {
+        Swal.fire("Registrasi Gagal!", "Password harus terdiri dari minimal 8 karakter, termasuk huruf, angka, dan simbol.", "error");
+        this.isLoading = false;
+        return;
+      }
       // Validasi nilai akhir
       if (this.register.finalScore < 0 || this.register.finalScore > 100) {
         Swal.fire(
@@ -162,10 +166,7 @@ export default {
         password: this.register.password,
         final_score: this.register.finalScore,
         school: this.register.school === "other" ? null : this.register.school,
-        manual_school_name:
-          this.register.school === "other"
-            ? this.register.manualSchoolName
-            : "",
+        manual_school_name: this.register.school === "other" ? this.register.manualSchoolName : "",
       };
 
       try {
@@ -222,8 +223,18 @@ export default {
   created() {
     this.fetchSchools();
   },
+  watch: {
+    'register.password'(newPassword) {
+      if (!this.isValidPassword(newPassword) && newPassword.length > 0) {
+        this.passwordError = "Password must be at least 8 characters long, include a number, and a symbol.";
+      } else {
+        this.passwordError = "";
+      }
+    }
+  },
 };
 </script>
+
 
 <style>
 .vh-100 {
