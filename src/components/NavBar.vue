@@ -39,7 +39,7 @@
               >
             </li> -->
             <li class="nav-item">
-              <router-link to="/report" class="nav-link">Report</router-link>
+              <router-link to="/report" class="nav-link">Laporan</router-link>
             </li>
             <hr class="d-sm-block d-md-none" />
             <li class="nav-item">

@@ -36,7 +36,7 @@
           <span v-if="isGenerateReport"> Loading Generate Report...</span>
         </button>
       </div>
-      <p v-else class="text-center mt-5">Lakukan Semua Tes dibawah ini!</p>
+      <p v-else class="text-center mt-5">Kerjakan semua subtes di bawah ini!</p>
 
       <div class="row">
         <CardItem
@@ -94,35 +94,35 @@ export default {
           disabled: false,
         },
         {
-          title: "Visualization",
+          title: "Visualisasi",
           key: "visual",
           imgSrc: require("@/assets/images/visualization.svg"),
           imgAlt: "Visualization",
           disabled: false,
         },
         {
-          title: "Induction",
+          title: "Induksi",
           key: "induction",
           imgSrc: require("@/assets/images/induction.svg"),
           imgAlt: "Induction",
           disabled: false,
         },
         {
-          title: "Qty Reas",
+          title: "Penalaran Kuantitatif",
           key: "quatitative_reasoning",
           imgSrc: require("@/assets/images/qty_reas.svg"),
           imgAlt: "Qty Reas",
           disabled: false,
         },
         {
-          title: "Math",
+          title: "Pencapaian Matematika",
           key: "math",
           imgSrc: require("@/assets/images/math.svg"),
           imgAlt: "Math",
           disabled: false,
         },
         {
-          title: "Reading",
+          title: "Membaca",
           key: "reading",
           imgSrc: require("@/assets/images/reading.svg"),
           imgAlt: "Reading",
