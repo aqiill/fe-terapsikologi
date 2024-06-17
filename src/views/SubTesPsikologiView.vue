@@ -95,35 +95,35 @@ export default {
           disabled: false,
         },
         {
-          title: "Visualisasi",
+          title: "Visualization",
           key: "visual",
           imgSrc: require("@/assets/images/visualization.svg"),
           imgAlt: "Visualization",
           disabled: false,
         },
         {
-          title: "Induksi",
+          title: "Induction",
           key: "induction",
           imgSrc: require("@/assets/images/induction.svg"),
           imgAlt: "Induction",
           disabled: false,
         },
         {
-          title: "Penalaran Kuantitatif",
+          title: "Qty Reas",
           key: "quatitative_reasoning",
           imgSrc: require("@/assets/images/qty_reas.svg"),
           imgAlt: "Qty Reas",
           disabled: false,
         },
         {
-          title: "Pencapaian Matematika",
+          title: "Math",
           key: "math",
           imgSrc: require("@/assets/images/math.svg"),
           imgAlt: "Math",
           disabled: false,
         },
         {
-          title: "Membaca",
+          title: "Reading",
           key: "reading",
           imgSrc: require("@/assets/images/reading.svg"),
           imgAlt: "Reading",
@@ -200,14 +200,11 @@ export default {
       const student_id = user.id;
 
       try {
-        const response = await axios.get(
-          `https://api.abcompany.my.id/api/checkSummary/${student_id}`,
-          {
-            headers: {
-              "api-key": "qwe123qwe#",
-            },
-          }
-        );
+        const response = await axios.get(`/api/checkSummary/${student_id}`, {
+          headers: {
+            "api-key": "qwe123qwe#",
+          },
+        });
         const data = response.data;
 
         if (data.message != "Anda belum mengerjakan/mengenerate Tes!") {
@@ -234,7 +231,7 @@ export default {
         this.isGenerateReport = true;
         try {
           const response = await axios.get(
-            `https://api.abcompany.my.id/api/generate/${student_id}/${school_id}`,
+            `/api/generate/${student_id}/${school_id}`,
             {
               headers: {
                 "api-key": "qwe123qwe#",
@@ -273,9 +270,7 @@ export default {
     },
     async fetchTestData() {
       try {
-        const response = await axios.get(
-          `https://api.abcompany.my.id/api/test/${this.id}`
-        );
+        const response = await axios.get(`/api/test/${this.id}`);
         const data = response.data;
 
         if (data.least_time === null) {

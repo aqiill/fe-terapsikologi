@@ -1,12 +1,18 @@
 <template>
   <div class="container-fluid vh-100 d-flex">
     <!-- Kolom Kiri: Logo -->
-    <div class="col-md-6 d-flex justify-content-center align-items-center bg-light">
-      <img src="https://app.terapsikologi.com/assets/img/logo_login.svg" alt="Logo" class="logo" />
+    <div
+      class="col-md-6 d-flex justify-content-center align-items-center bg-light"
+    >
+      <img
+        src="https://app.terapsikologi.com/assets/img/logo_login.svg"
+        alt="Logo"
+        class="logo"
+      />
     </div>
     <!-- Kolom Kanan: Form Login atau Register -->
     <div class="col-md-6 d-flex justify-content-center align-items-center">
-      <div style="width: 100%; max-width: 400px;">
+      <div style="width: 100%; max-width: 400px">
         <div v-if="!showRegister">
           <div class="text-center mb-4">
             <h2>Login</h2>
@@ -14,19 +20,44 @@
           <form @submit.prevent="handleLogin">
             <div class="mb-3">
               <label for="loginEmail" class="form-label">Email</label>
-              <input type="email" class="form-control" id="loginEmail" v-model="login.email" required />
+              <input
+                type="email"
+                class="form-control"
+                id="loginEmail"
+                v-model="login.email"
+                required
+              />
             </div>
             <div class="mb-3">
               <label for="loginPassword" class="form-label">Password</label>
-              <input type="password" class="form-control" id="loginPassword" v-model="login.password" required />
+              <input
+                type="password"
+                class="form-control"
+                id="loginPassword"
+                v-model="login.password"
+                required
+              />
             </div>
-            <button type="submit" class="btn btn-primary w-100 mb-3 purple-button" :disabled="isLoading">
+            <button
+              type="submit"
+              class="btn btn-primary w-100 mb-3 purple-button"
+              :disabled="isLoading"
+            >
               <span v-if="isLoading">Loading...</span>
               <span v-else>Masuk</span>
             </button>
           </form>
           <div class="text-center mt-3">
-            <span>Belum punya akun? <button type="button" class="btn custom-link no-underline p-0" @click="toggleRegister(true)">Buat akun</button></span>
+            <span
+              >Belum punya akun?
+              <button
+                type="button"
+                class="btn custom-link no-underline p-0"
+                @click="toggleRegister(true)"
+              >
+                Buat akun
+              </button></span
+            >
           </div>
         </div>
 
@@ -37,20 +68,48 @@
           <form @submit.prevent="handleRegister">
             <div class="mb-3">
               <label for="registerEmail" class="form-label">Email</label>
-              <input type="email" class="form-control" id="registerEmail" v-model="register.email" required />
+              <input
+                type="email"
+                class="form-control"
+                id="registerEmail"
+                v-model="register.email"
+                required
+              />
             </div>
             <div class="mb-3">
               <label for="registerPassword" class="form-label">Password</label>
-              <input type="password" class="form-control" id="registerPassword" v-model="register.password" required />
+              <input
+                type="password"
+                class="form-control"
+                id="registerPassword"
+                v-model="register.password"
+                required
+              />
             </div>
             <div class="mb-3">
               <label for="finalScore" class="form-label">Nilai Akhir</label>
-              <input type="number" class="form-control" id="finalScore" v-model="register.finalScore" required />
+              <input
+                type="number"
+                class="form-control"
+                id="finalScore"
+                v-model="register.finalScore"
+                required
+              />
             </div>
             <div class="mb-3">
               <label for="school" class="form-label">Pilihan Sekolah</label>
-              <select class="form-select" id="school" v-model="register.school" @change="checkSchool" required>
-                <option v-for="school in schools" :key="school.id" :value="school.id">
+              <select
+                class="form-select"
+                id="school"
+                v-model="register.school"
+                @change="checkSchool"
+                required
+              >
+                <option
+                  v-for="school in schools"
+                  :key="school.id"
+                  :value="school.id"
+                >
                   {{ school.school_name.toUpperCase() }}
                 </option>
                 <option value="other">Lainnya...</option>
@@ -58,14 +117,33 @@
             </div>
             <div v-if="register.school === 'other'" class="mb-3">
               <label for="otherSchool" class="form-label">Nama Sekolah</label>
-              <input type="text" class="form-control" id="otherSchool" v-model="register.manualSchoolName" required />
+              <input
+                type="text"
+                class="form-control"
+                id="otherSchool"
+                v-model="register.manualSchoolName"
+                required
+              />
             </div>
-            <button type="submit" class="btn btn-primary w-100 mb-3 purple-button" :disabled="isLoading">
+            <button
+              type="submit"
+              class="btn btn-primary w-100 mb-3 purple-button"
+              :disabled="isLoading"
+            >
               <span v-if="isLoading">Loading...</span>
               <span v-else>Daftar</span>
             </button>
             <div class="text-center mt-3">
-              <span>Sudah punya akun? <button type="button" class="btn custom-link no-underline p-0" @click="toggleRegister(false)">Kembali ke login</button></span>
+              <span
+                >Sudah punya akun?
+                <button
+                  type="button"
+                  class="btn custom-link no-underline p-0"
+                  @click="toggleRegister(false)"
+                >
+                  Kembali ke login
+                </button></span
+              >
             </div>
           </form>
         </div>
@@ -101,7 +179,8 @@ export default {
   },
   methods: {
     isValidPassword(password) {
-      const regex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/;
+      const regex =
+        /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/;
       return regex.test(password);
     },
     async fetchSchools() {
@@ -119,7 +198,11 @@ export default {
     },
     async handleLogin() {
       if (!this.login.email || !this.login.password) {
-        Swal.fire("Login Gagal!", "Harap isi semua bidang yang diperlukan.", "warning");
+        Swal.fire(
+          "Login Gagal!",
+          "Harap isi semua bidang yang diperlukan.",
+          "warning"
+        );
         return;
       }
       const loginData = {
@@ -146,7 +229,11 @@ export default {
     async handleRegister() {
       this.isLoading = true;
       if (!this.isValidPassword(this.register.password)) {
-        Swal.fire("Registrasi Gagal!", "Password harus terdiri dari minimal 8 karakter, termasuk huruf, angka, dan simbol.", "error");
+        Swal.fire(
+          "Registrasi Gagal!",
+          "Password harus terdiri dari minimal 8 karakter, termasuk huruf, angka, dan simbol.",
+          "error"
+        );
         this.isLoading = false;
         return;
       }
@@ -166,19 +253,18 @@ export default {
         password: this.register.password,
         final_score: this.register.finalScore,
         school: this.register.school === "other" ? null : this.register.school,
-        manual_school_name: this.register.school === "other" ? this.register.manualSchoolName : "",
+        manual_school_name:
+          this.register.school === "other"
+            ? this.register.manualSchoolName
+            : "",
       };
 
       try {
-        const response = await axios.post(
-          "https://api.abcompany.my.id/api/register",
-          registrationData,
-          {
-            headers: {
-              "api-key": "qwe123qwe#",
-            },
-          }
-        );
+        const response = await axios.post("/api/register", registrationData, {
+          headers: {
+            "api-key": "qwe123qwe#",
+          },
+        });
 
         if (response.data.message === "Registration successful") {
           Swal.fire("Registrasi Berhasil!", "", "success");
@@ -224,17 +310,17 @@ export default {
     this.fetchSchools();
   },
   watch: {
-    'register.password'(newPassword) {
+    "register.password"(newPassword) {
       if (!this.isValidPassword(newPassword) && newPassword.length > 0) {
-        this.passwordError = "Password must be at least 8 characters long, include a number, and a symbol.";
+        this.passwordError =
+          "Password must be at least 8 characters long, include a number, and a symbol.";
       } else {
         this.passwordError = "";
       }
-    }
+    },
   },
 };
 </script>
-
 
 <style>
 .vh-100 {

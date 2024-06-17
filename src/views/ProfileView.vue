@@ -271,7 +271,7 @@ export default {
       const studentId = JSON.parse(localStorage.getItem("user")).id; // Mengambil student_id
       axios
         .post(
-          `https://api.abcompany.my.id/api/profile/${studentId}`,
+          `/api/profile/${studentId}`,
           {
             student_name: this.user.name,
             final_score: this.user.finalScore,
@@ -356,7 +356,7 @@ export default {
 
       axios
         .post(
-          "https://api.abcompany.my.id/api/changePassword",
+          "/api/changePassword",
           {
             email: email,
             password: this.passwords.current,

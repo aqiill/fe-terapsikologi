@@ -11,7 +11,12 @@
             height="50"
           />
           <h6>{{ student_name }}</h6>
-          <span class="badge bg-success"
+          <span
+            :class="{
+              badge: true,
+              'bg-success': minutes > 0 || seconds > 59,
+              'bg-danger blink': minutes === 0 && seconds < 60,
+            }"
             >Sisa Waktu {{ minutes }}:{{ seconds }}</span
           >
         </div>
@@ -258,6 +263,8 @@ export default {
             }).then(() => {
               if (this.$route.name !== "tes-psikologi") {
                 this.$router.push({ name: "tes-psikologi" });
+              } else if (this.$route.name == "tes-psikologi") {
+                location.reload();
               }
             });
           }
@@ -276,7 +283,7 @@ export default {
 
       try {
         const response = await axios.get(
-          `https://api.abcompany.my.id/api/test/form/${questionNumber}/${studentId}`,
+          `/api/test/form/${questionNumber}/${studentId}`,
           {
             headers: {
               "api-key": "qwe123qwe#",
@@ -399,7 +406,7 @@ export default {
 
       try {
         await axios.post(
-          `https://api.abcompany.my.id/api/test/submit/${questionId}/${studentId}`,
+          `/api/test/submit/${questionId}/${studentId}`,
           {
             answer: this.selectedAnswer,
             created_at: isoDate,
@@ -465,6 +472,16 @@ export default {
 </script>
 
 <style scoped>
+@keyframes blink {
+  50% {
+    opacity: 0;
+  }
+}
+
+.blink {
+  animation: blink 1s step-start 0s infinite;
+}
+
 body {
   background-color: #f8f9fa;
 }

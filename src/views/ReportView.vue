@@ -257,14 +257,11 @@ export default {
   methods: {
     async checkAllTestsDisabled(studentId) {
       try {
-        const response = await axios.get(
-          `https://api.abcompany.my.id/api/report/${studentId}`,
-          {
-            headers: {
-              "api-key": "qwe123qwe#",
-            },
-          }
-        );
+        const response = await axios.get(`/api/report/${studentId}`, {
+          headers: {
+            "api-key": "qwe123qwe#",
+          },
+        });
         if (
           response.data.message === "Anda belum mengerjakan/mengenerate Tes!"
         ) {
