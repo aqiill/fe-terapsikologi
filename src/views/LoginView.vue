@@ -1,17 +1,11 @@
 <template>
   <div class="container-fluid vh-100 d-flex">
     <!-- Kolom Kiri: Logo -->
-    <div
-      class="col-md-6 d-flex justify-content-center align-items-center bg-light"
-    >
-      <img
-        src="https://app.terapsikologi.com/assets/img/logo_login.svg"
-        alt="Logo"
-        class="logo"
-      />
+    <div class="col-lg-6 d-none d-lg-flex justify-content-center align-items-center bg-light">
+      <img src="https://app.terapsikologi.com/assets/img/logo_login.svg" alt="Logo" class="logo" />
     </div>
     <!-- Kolom Kanan: Form Login atau Register -->
-    <div class="col-md-6 d-flex justify-content-center align-items-center">
+    <div class="col-12 col-lg-6 d-flex justify-content-center align-items-center">
       <div style="width: 100%; max-width: 400px">
         <div v-if="!showRegister">
           <div class="text-center mb-4">
@@ -355,4 +349,11 @@ export default {
 .no-underline:hover {
   text-decoration: underline;
 }
+/* Hide logo column on screens smaller than large devices */
+@media (max-width: 991.98px) {
+  .d-none.d-lg-flex {
+    display: none !important;
+  }
+}
 </style>
+
